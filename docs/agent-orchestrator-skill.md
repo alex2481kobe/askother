@@ -319,7 +319,26 @@ isolation.
      under the captured-evidence rule in step 5.
 
    **A spawn past your capacity is refused, not queued** — see "Lane capacity".
-4. **Monitor.** Watch executors:
+4. **Watch — right after this first spawn.** A finished lane already pushes a
+   durable wakeup into your event queue, but nothing pulls that queue for a
+   session that is only woken by its own tool output, so the wakeup sits
+   there unread until you happen to poll. Start Orca's lane-state watcher
+   under a Monitor-style/streaming-output tool of your own:
+
+   ```bash
+   node /absolute/path/to/orca/src/orca-cli.js watch --orchestrator orc_…
+   ```
+
+   Both `orchestrator.register` and `executor.spawn` hand this exact command
+   back in a `watch` field, so you never have to compose it by hand. It polls
+   `lane.list`, prints exactly one line per real lane state change
+   (`<laneId8> <title> <from>→<to>`), stays silent otherwise, prints one line
+   on a daemon outage and one on reconnect, and exits on its own once you
+   have no active (non-terminal) lane left — pass `--forever` to keep it
+   running past that. Each printed line is stdout from a tool you are
+   watching, which is what actually wakes a Claude Code session; polling
+   `orchestrator.status` yourself between tool calls does not.
+5. **Monitor.** Watch executors:
    - `lane.list` — all lanes for the project and their state.
    - `lane.get` — full detail for one lane (contract, logs, changed files,
      `resultText` — read this to see WHY a lane failed).
@@ -327,7 +346,7 @@ isolation.
      `nextOffset`.
    - `lane.terminal.write` — answer a prompt a worker is blocked on. This is the
      one way to type into a running executor; the dashboard has no such control.
-5. **Audit — one verdict call per lane.** When an executor submits (or exits),
+6. **Audit — one verdict call per lane.** When an executor submits (or exits),
    review its real output, then make **one** of these calls. Each applies its
    verdict immediately:
    - `audit.accept { laneId, body: { findings, reviewedFiles } }` — accept.
@@ -353,7 +372,7 @@ isolation.
      artifact on the lane. Check with `lane.artifacts.list` / read it with
      `lane.artifacts.get` before accepting; if there is none, `audit.request_fix`
      and tell the executor to capture a screenshot.
-6. **Land isolated work.** A lane that ran in its own worktree is not in the
+7. **Land isolated work.** A lane that ran in its own worktree is not in the
    project checkout yet. `lane.integrate` merges it only when the lane is
    isolated, audit-accepted, its executor process has exited, and its worktree
    has **no uncommitted changes**. Integration merges the lane branch's
@@ -374,7 +393,7 @@ isolation.
    git — is KEPT, and both calls return a `worktreeCleanup` object saying which
    and why, naming the tool that resolves it. So `worktreeCleanup.removed: false`
    on an accept is normal and means "there is still work here only you can land".
-7. **Resign.** When the work is done, call `orchestrator.resign` so Orca stops
+8. **Resign.** When the work is done, call `orchestrator.resign` so Orca stops
    listing you as an active orchestrator for the project.
 
 ## Worktree isolation is conditional
@@ -449,7 +468,9 @@ then `approval.respond`. A governed Claude executor **blocks** until you decide.
 draining IS the acknowledgement. Whatever a drain returns is consumed and will
 never be returned again, so **persist the events before you act on them**; if
 your call fails mid-processing, those events are gone. Query params: `limit`,
-`type`, `afterSeq`.
+`type`, `afterSeq`. `event.drain` is a PULL: nothing calls it for you, which
+is why the watcher in step 4 above exists — run the watcher rather than
+building your own poll loop against `event.drain`.
 
 `fleet.emergency_stop` is the break-glass path: it stops running agents. Use it
 when something is genuinely running away, not as routine cleanup.

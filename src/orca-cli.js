@@ -49,8 +49,18 @@
 //       while it works. Deleting from the archive needs --purge-archive AND an age.
 //       It acts on the same state directory start/stop/status do.
 //
-// doctor, connect and gc never start, stop or signal Orca; start, stop, status,
-// logs and service are the only commands that do.
+//   watch --orchestrator <id> [--url URL] [--interval MS] [--forever]
+//       Lane-state watcher (src/cli-watch.js). Polls
+//       GET /api/orchestrators/{id}/lanes on --interval (default 2000ms) and
+//       prints exactly one line per real lane state change:
+//       "<laneId8> <title> <from>→<to>". Silent otherwise; one line on a
+//       daemon outage and one on reconnect. Exits once the orchestrator has no
+//       active (non-terminal) lane left; --forever keeps it running. Meant to
+//       be run under a Monitor-style tool right after your first spawn — see
+//       ROLE_INSTRUCTIONS.orchestrator and docs/agent-orchestrator-skill.md.
+//
+// doctor, connect, gc and watch never start, stop or signal Orca; start, stop,
+// status, logs and service are the only commands that do.
 
 import { spawnSync } from 'node:child_process';
 import fs from 'node:fs';
@@ -73,6 +83,7 @@ import {
 import { setup } from './cli-setup.js';
 import { resolveApiToken } from './api-token.js';
 import { GC_BOOLEAN_FLAGS, GC_USAGE, runGcCommand } from './orca-gc-cli.js';
+import { WATCH_USAGE, runWatch } from './cli-watch.js';
 import {
   DEFAULT_BASE_URL,
   LEASE_HEADER,
@@ -95,12 +106,13 @@ const USAGE = `Usage:
   ${CLI} service uninstall [--force]
   ${CLI} doctor [--json] [--url URL] [--node PATH]
   ${CLI} connect <claude|codex> [--actor NAME] [--url URL] [--node PATH] [--print]
+  ${CLI} ${WATCH_USAGE}
   ${CLI} ${GC_USAGE}`;
 
 const CLIENT_LABELS = { claude: 'Claude Code', codex: 'Codex' };
 const HTTP_TIMEOUT_MS = 5000;
 
-const BOOLEAN_FLAGS = new Set(['json', 'print', 'force', 'dry-run', 'allow-home-root', 'no-start', 'no-load', 'replace', ...GC_BOOLEAN_FLAGS]);
+const BOOLEAN_FLAGS = new Set(['json', 'print', 'force', 'dry-run', 'allow-home-root', 'no-start', 'no-load', 'replace', 'forever', ...GC_BOOLEAN_FLAGS]);
 // May repeat; each value may also be a comma-separated list.
 const LIST_FLAGS = new Set(['roots', 'connect']);
 
@@ -664,6 +676,7 @@ const COMMANDS = {
     return 2;
   },
   gc: () => runGcCommand(flags),
+  watch: () => runWatch(flags, out),
 };
 if (!command) {
   process.stdout.write(`${USAGE}\n`);

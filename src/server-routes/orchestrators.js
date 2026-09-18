@@ -4,6 +4,19 @@
 // to the lease. Replaces the session-scoped enroll flow.
 import { FALL_THROUGH } from './lanes.js';
 import { makeUnsandboxedGate, UNSANDBOXED_DENIAL } from './permission-gate.js';
+import { fixCommands } from '../mcp-connection.js';
+
+// Handed back on orchestrator.register and executor.spawn so a registering
+// orchestrator learns the exact watcher command instead of having to know it
+// exists. See src/cli-watch.js and ROLE_INSTRUCTIONS.orchestrator (the wake gap
+// this closes: a completed lane already enqueues a durable event — bb416e6 —
+// but nothing was ever polling for it on a Claude Code orchestrator's behalf).
+function watchHint(orchestratorId) {
+  return {
+    command: fixCommands.watch(orchestratorId),
+    note: 'Run this under a Monitor-style/streaming-output tool right after your first spawn — it prints one line per lane state change and wakes you when work finishes, instead of leaving you to re-poll.',
+  };
+}
 
 
 // A fence refusal (src/fence.js) carries a stable code and the one command that
@@ -93,7 +106,7 @@ export async function handleOrchestratorRoutes(ctx, req, res, method, parts) {
         },
         { leaseId, source },
       );
-      return sendJson(res, 200, orchestrator);
+      return sendJson(res, 200, { ...orchestrator, watch: watchHint(orchestrator.id) });
     } catch (error) {
       return sendJson(res, error.status || 500, { error: error.message || 'Could not register orchestrator.', ...fenceFields(error) });
     }
@@ -151,7 +164,7 @@ export async function handleOrchestratorRoutes(ctx, req, res, method, parts) {
         actor: req._toolLease?.actor || body.actor || orchestrator.actor || 'orchestrator',
         approved: body.approved,
       });
-      return sendJson(res, 201, lane);
+      return sendJson(res, 201, { ...lane, watch: watchHint(orchestratorId) });
     } catch (error) {
       return sendJson(res, error.status || 500, {
         error: error.message || 'Could not spawn executor.',

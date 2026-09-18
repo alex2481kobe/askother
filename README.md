@@ -171,6 +171,20 @@ a different model. How to drive the loop: the
 [orchestrator skill](docs/agent-orchestrator-skill.md) and the
 [executor skill](docs/agent-executor-skill.md).
 
+**Right after your first spawn, start the lane-state watcher** so you actually
+learn when work finishes — a completed lane enqueues a durable wakeup event,
+but nothing delivers it to a session that is only woken by its own tool
+output, so it has to be watched for:
+
+```bash
+node src/orca-cli.js watch --orchestrator <your orchestrator id>
+```
+
+Run it under a streaming/Monitor-style tool. It prints one line per real lane
+state change (`<laneId8> <title> <from>→<to>`), stays silent otherwise, and
+exits once you have no active lane left. Both `orchestrator.register` and
+`executor.spawn` hand back the exact command in a `watch` field.
+
 ```
 you, in Claude Code / Codex        Orca daemon                    dashboard
 ───────────────────────────        ───────────                    ─────────

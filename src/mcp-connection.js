@@ -65,6 +65,12 @@ export const fixCommands = {
   setup: (roots = null) => cli(`setup --roots ${Array.isArray(roots) && roots.length ? shellQuote(roots.join(',')) : '<dir>[,<dir>...]'}`),
   doctor: () => `${shellQuote(process.execPath)} ${shellQuote(CLI_PATH)} doctor`,
   connect: (client = 'claude', extra = '') => `${shellQuote(process.execPath)} ${shellQuote(CLI_PATH)} connect ${client}${extra ? ` ${extra}` : ''}`,
+  // The lane-state watcher (src/cli-watch.js). Handed back on
+  // orchestrator.register and executor.spawn so an orchestrator learns the
+  // exact command instead of having to know it exists — run it under a
+  // Monitor-style/streaming-output tool right after your first spawn so a lane
+  // finishing prints a line and wakes you, instead of re-polling by hand.
+  watch: (orchestratorId) => cli(`watch --orchestrator ${shellQuote(orchestratorId)}`),
 };
 
 const lines = (...parts) => parts.filter(Boolean).join('\n');
