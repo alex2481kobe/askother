@@ -55,6 +55,6 @@ then show me what it wrote.
 
 ## Works with
 
-Claude Code and Codex, in the terminal and in the Codex desktop app. Other CLI agents can be added with an adapter, and a Jev adapter is planned.
+Claude Code and Codex, in the terminal and in their desktop apps (with the `claude` and `codex` command line tools installed). Other CLI agents can be added with an adapter, and a Jev adapter is planned.
 
 Apache-2.0. The Claude Code and Codex icons in the UI belong to Anthropic and OpenAI and only label which worker is which.

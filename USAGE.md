@@ -31,7 +31,7 @@ Optionally copy `skills/askother` from this repo into `~/.claude/skills/` and `~
 ## Good to know
 
 - AskOther uses the worker CLI's own permission mode. It is not a sandbox. The defaults are Claude Code `dontAsk` and Codex `read-only`.
-- Tested: Claude Code CLI, Codex CLI, and the Codex desktop app. Claude Code inside the Claude desktop app is untested. Chat apps are not supported.
+- Tested: Claude Code and Codex in the terminal, and in the Claude and Codex desktop apps. Workers are always the `claude` and `codex` command line programs, so install those even if you mostly use the desktop apps. A desktop-only setup, with no command line programs installed, is untested. Chat apps are not supported.
 - Other CLI agents need an adapter in `internal/worker`. Claude Code and Codex are the only ones today; a Jev adapter is planned.
 - The UI shows a worker's requested model when one was given. It does not guess the model a CLI picked by default.
 - The Claude Code and Codex icons in the UI are Anthropic's and OpenAI's marks, used only to label which worker is which.
