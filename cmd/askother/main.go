@@ -32,6 +32,12 @@ func dispatch(args []string, stdout, stderr io.Writer) int {
 		fmt.Fprint(stderr, usage)
 		return exitRefused
 	}
+	// `askother <command> --help` shows the help instead of running the command.
+	for _, a := range args[1:] {
+		if a == "--help" || a == "-h" {
+			return cmdHelp(stdout, stderr)
+		}
+	}
 	switch cmd, rest := args[0], args[1:]; cmd {
 	case "mcp":
 		return cmdMCP(rest, stderr)

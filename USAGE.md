@@ -1,5 +1,41 @@
 # AskOther usage and settings
 
+## Set up by hand
+
+AskOther runs on macOS and Linux and needs Go 1.26 or newer, plus the Claude Code or Codex CLI you want to use.
+
+```sh
+go install github.com/alex2481kobe/askother/cmd/askother@latest
+askother help
+```
+
+`askother help` prints the setup lines below with the real path to your binary filled in. If `askother` is not on your `PATH`, run it from your Go bin directory.
+
+**Claude Code**
+
+```sh
+claude mcp add -s user askother -- /path/to/askother mcp
+```
+
+**Codex, CLI and desktop app**, in `~/.codex/config.toml`:
+
+```toml
+[mcp_servers.askother]
+command = "/path/to/askother"
+args = ["mcp"]
+default_tools_approval_mode = "approve"
+```
+
+Start a new agent session afterwards.
+
+## Good to know
+
+- AskOther uses the worker CLI's own permission mode. It is not a sandbox. The defaults are Claude Code `dontAsk` and Codex `read-only`.
+- Tested: Claude Code CLI, Codex CLI, and the Codex desktop app. Claude Code inside the Claude desktop app is untested. Chat apps are not supported.
+- Other CLI agents need an adapter in `internal/worker`. Claude Code and Codex are the only ones today; a Jev adapter is planned.
+- The UI shows a worker's requested model when one was given. It does not guess the model a CLI picked by default.
+- The Claude Code and Codex icons in the UI are Anthropic's and OpenAI's marks, used only to label which worker is which.
+
 ## Agent workflow
 
 Register `askother mcp` once with each agent CLI that should use AskOther. The CLI starts its own MCP server for each session and closes it with that session. A worker can use AskOther only if AskOther is also registered in that worker's CLI.
@@ -44,7 +80,7 @@ Claude Code runs with `--permission-prompts none`. Codex runs with `approval_pol
 
 ## Local UI
 
-Run `askother ui` to open the run tree. It listens only on a random loopback port while that command is running; Ctrl-C closes it. Its URL contains a one-time token.
+Run `askother ui` to open the run tree. It listens only on a random loopback port while that command is running; Ctrl-C closes it. Its URL contains a one-time token. Drag to pan, scroll to zoom, and click a card for details.
 
 The sidebar has one row per caller session, identified by its client and a short session ID. There can be several rows for the same client. The root card shows the caller; child cards show the workers it started. A Claude Code caller may start a Codex worker, and a Codex caller may start a Claude Code worker. Runs started by a worker appear below that worker.
 

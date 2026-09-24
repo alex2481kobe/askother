@@ -76,3 +76,12 @@ func TestDispatchRefusals(t *testing.T) {
 		t.Errorf("version: %d %q", code, out.String())
 	}
 }
+
+func TestSubcommandHelp(t *testing.T) {
+	for _, args := range [][]string{{"mcp", "--help"}, {"wait", "-h"}, {"ui", "--help"}, {"wait", "run-1", "--help"}} {
+		var out, errb bytes.Buffer
+		if code := dispatch(args, &out, &errb); code != 0 || !strings.Contains(out.String(), "Usage:") {
+			t.Errorf("%q: exit %d, stdout %q, stderr %q", args, code, out.String(), errb.String())
+		}
+	}
+}
