@@ -47,7 +47,7 @@ Run all three before you open a pull request. `gofmt -l .` should print nothing.
 - Explain what changed and which checks you ran.
 - Keep unrelated changes out of the pull request.
 - Workflows on pull requests from outside contributors run only after a
-  maintainer approves them. They run with a read-only token and no secrets.
+  maintainer approves them.
 - Changes to `.github/`, `go.mod`, `SECURITY.md`, this file, `LICENSE`,
   `AGENTS.md` or `CLAUDE.md` need owner review. Maintainers may ask for smaller
   pull requests when these change.

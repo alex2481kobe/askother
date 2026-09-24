@@ -11,7 +11,7 @@ make it public.
 
 Helpful details:
 
-- the commit you built from
+- the AskOther version (`askother version`) or commit you built from
 - your operating system and CPU type
 - your Go version, and the Claude Code or Codex version involved
 - the tool or command you used, and the smallest steps that show the problem
@@ -21,8 +21,8 @@ Do not include API keys, tokens, private host names or unredacted logs.
 
 ## Supported versions
 
-AskOther has no releases yet. You build it from source. Security fixes go to the
-`main` branch, so please check the latest `main` before reporting.
+Security fixes go into the next release. Please check the latest release or
+`main` before reporting.
 
 ## What AskOther protects, and what it does not
 

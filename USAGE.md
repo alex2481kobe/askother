@@ -7,7 +7,7 @@ AskOther runs on macOS and Linux. On Windows, use WSL (untested). You also need 
 1. **Install** one of two ways:
    - Download the archive for your computer from [Releases](https://github.com/alex2481kobe/askother/releases), check it against `SHA256SUMS`, and put `askother` somewhere on your `PATH`, such as `~/.local/bin`.
    - Or, with Go 1.26 or newer: `go install github.com/alex2481kobe/askother/cmd/askother@latest`
-   - On macOS, a file downloaded in a browser is quarantined, and macOS will refuse to run it. Clear that once with `xattr -d com.apple.quarantine askother`. When you update, move the new file into place or delete the old one first. Copying over the old file in place makes macOS stop the new one when it starts.
+   - macOS: if a browser download will not run, clear the quarantine flag with `xattr -d com.apple.quarantine askother`. To update, replace the file (move or delete, then copy) rather than copying over it.
 2. **Register it.** Run `askother help`. Its Setup section prints these lines with the real path filled in.
 
    Claude Code:
@@ -38,7 +38,7 @@ AskOther runs on macOS and Linux. On Windows, use WSL (untested). You also need 
 
 ## Agent workflow
 
-Register `askother mcp` once with each agent CLI that should use AskOther. The CLI starts its own MCP server for each session and closes it with that session. A worker can use AskOther only if AskOther is also registered in that worker's CLI.
+Each agent session starts its own `askother mcp` and closes it when the session ends. A worker can use AskOther only if it is registered in that worker's CLI too.
 
 The usual flow is `run`, `wait`, then `result`. AskOther saves a run's answer until it is read or cleaned up.
 
@@ -76,7 +76,7 @@ AskOther passes the chosen mode to the worker CLI. The CLI enforces it; AskOther
 | Claude Code | `dontAsk` | `plan`, `manual` or `default`, `acceptEdits`, `auto`, `bypassPermissions` |
 | Codex | `read-only` | `workspace-write`, `danger-full-access` |
 
-Claude Code runs with `--permission-prompts none`. Codex runs with `approval_policy="never"` and `--skip-git-repo-check`. The Codex registration setting `default_tools_approval_mode = "approve"` lets the agent call AskOther without waiting for a person to approve each tool call.
+Claude Code runs with `--permission-prompts none`. Codex runs with `approval_policy="never"` and `--skip-git-repo-check`.
 
 ## Local UI
 
