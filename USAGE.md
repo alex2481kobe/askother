@@ -7,7 +7,7 @@ AskOther runs on macOS and Linux. On Windows, use WSL (untested). You also need 
 1. **Install** one of two ways:
    - Download the archive for your computer from [Releases](https://github.com/alex2481kobe/askother/releases), check it against `SHA256SUMS`, and put `askother` somewhere on your `PATH`, such as `~/.local/bin`.
    - Or, with Go 1.26 or newer: `go install github.com/alex2481kobe/askother/cmd/askother@latest`
-   - macOS builds are signed and notarized. To update, replace the file (move or delete, then copy) rather than copying over it.
+   - The macOS builds are signed and notarized.
 2. **Register it.** Run `askother help`. Its Setup section prints these lines with the real path filled in.
 
    Claude Code:
