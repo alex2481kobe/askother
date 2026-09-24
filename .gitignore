@@ -1,61 +1,34 @@
-artifacts/
-.orca/
-# Both spellings on purpose. "node_modules/" matches only a DIRECTORY, so it does
-# not match the node_modules SYMLINK a linked worktree uses to share the primary
-# checkout's install — and an unmatched symlink is one `git add -A` away from
-# being committed. Checking such a commit out in the primary checkout then
-# recreates the link AT its own target, and every worktree pointing at it
-# resolves into an empty loop: dependencies silently vanish for every lane at
-# once, and it only surfaces as one test file that cannot load @lydell/node-pty.
-node_modules
-node_modules/
+# Only what a build produces or what must never leave a machine.
+
+# Built binaries
+/orca
+/cmd/orca/orca
+*.test
+*.out
+dist/
+coverage/
+*.cpuprofile
+*.heapprofile
+*.trace
+
+# Logs and temporary files
 *.log
-*.log.*
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
+tmp/
+temp/
 .DS_Store
+
+# Environment files and secrets
 .env
 .env.*
-.tauri/
-coverage/
-dist/
-build/
-.tmp/
-tmp/
-*.pid
-*.seed
-*.swp
-*.swo
-*.swn
-.verify-out.txt
-tmp-visual/
+.envrc
+*.local
+*.pem
+*.key
+*.p8
+*.p12
 
-# Local-only docs (never published). The `.local.md` suffix marks working notes
-# that must stay off the public repo; also the private roadmap/task docs that
-# CLAUDE.md references but are intentionally untracked, plus the maintainer
-# release/GitHub-settings runbook (owner ops — kept local per the contribution
-# policy's "keep owner setting checklists local" rule).
-*.local.md
-docs/roadmap.md
-docs/current-task.md
-docs/full-buildout-goal.md
-docs/open-source-release-checklist.md
-docs/final-readiness-report.md
-
-# Local-only workspace coordination. These lived in the parent wrapper folder
-# before the repo was flattened to a single `orca/` root; they are local
-# governance/scratch and must never be published.
-throwaway/
+# Local agent settings
+.claude/
+.codex/
 .claudeignore
 .codexignore
-.claude/
-
-# Native wrapper is parked on the experimental branch; kept out of main.
-src-tauri/
-
-# Agent run artifacts — prompts, verdicts and console logs from local
-# orchestrator runs. These carry absolute paths and the names of whatever
-# repo the lane was driving, so they are working data, never shipped.
-runs/

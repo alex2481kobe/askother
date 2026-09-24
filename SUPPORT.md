@@ -1,13 +1,12 @@
 # Support
 
-For setup questions, bugs, and feature requests, use GitHub Issues.
+For setup questions, bugs and feature requests, use GitHub Issues.
 
 Before filing an issue:
 
 - Search existing issues.
-- Run the relevant verification command from `README.md`.
-- Redact API tokens, provider secrets, pairing codes, cookies, private
-  hostnames, local file paths that identify private projects, and screenshots
-  containing sensitive data.
+- Run `orca help` and check the setup steps in `README.md`.
+- Remove API keys, tokens, private host names, and file paths that name
+  private projects from anything you paste.
 
-For security vulnerabilities, use `SECURITY.md` instead of a public issue.
+For security problems, follow `SECURITY.md` instead of opening a public issue.

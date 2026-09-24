@@ -1,9 +1,8 @@
 name: ci
 
-# Manual-only by policy: the contribution model is intentionally conservative,
-# so workflows run only when a maintainer dispatches them. Do not add automatic
-# `push`, `pull_request`, `pull_request_target`, or scheduled triggers without
-# owner review.
+# Manual only by policy: workflows run when a maintainer starts them. Do not
+# add automatic push, pull_request, pull_request_target or scheduled triggers
+# without owner review.
 on:
   workflow_dispatch:
 
@@ -15,113 +14,31 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  verify:
-    name: verify
-    runs-on: ubuntu-24.04
-    timeout-minutes: 25
-
+  test:
+    name: test (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, macos-15]
+    env:
+      # A build must never rewrite go.mod on its own.
+      GOFLAGS: -mod=readonly
     steps:
       - name: Check out repository
         uses: actions/checkout@v6
         with:
           persist-credentials: false
 
-      - name: Set up Node
-        uses: actions/setup-node@v6
+      - name: Set up Go
+        uses: actions/setup-go@v6
         with:
-          node-version: 24
-          cache: npm
+          go-version: "1.26"
+          cache: false
 
-      - name: Verify npm guardrails
-        run: |
-          grep -qx "allow-git=none" .npmrc
-          grep -qx "ignore-scripts=true" .npmrc
-          grep -qx "min-release-age=30" .npmrc
-          grep -qx "save-exact=true" .npmrc
-          grep -qx "audit=true" .npmrc
-          grep -qx "fund=false" .npmrc
+      - name: Vet
+        run: go vet ./...
 
-      - name: Install dependencies
-        run: npm ci --ignore-scripts
-
-      - name: Type-check (undefined-name / broken-import gate)
-        run: npm run typecheck:imports
-
-      - name: Design tokens (no hardcoded theme colors)
-        run: npm run smoke:no-hardcoded-colors
-
-      - name: Install Playwright Chromium
-        run: npx playwright install --with-deps chromium
-
-      - name: Run tests
-        run: npm test
-
-      - name: Run full-flow smoke
-        # Playwright Chromium is installed above, so the pairing-gate + browser
-        # proofs must actually RUN — never silently skip to a false green.
-        env:
-          ORCA_REQUIRE_BROWSER_PROOF: '1'
-        run: npm run smoke
-
-      - name: Screen proofs (server-down "Start Orca" + remote-client unlink/switch)
-        run: npm run smoke:screens
-
-      - name: Run security guards (unauthenticated-access sweep, SSRF, headers)
-        run: |
-          npm run smoke:unauth-sweep
-          npm run smoke:ssrf
-          npm run smoke:security-headers
-
-      - name: Run supplemental smokes (PWA cache, state migrations, MCP flow)
-        run: |
-          npm run smoke:pwa-cache
-          npm run smoke:state-migrations
-          npm run smoke:mcp-flow
-          # Drives the exact README quickstart end-to-end as a real MCP client.
-          # Unit tests always pass ids explicitly, so this is the only gate that
-          # catches a broken ONBOARDING surface (e.g. a renamed route param the
-          # bridge no longer fills in for the agent).
-          npm run smoke:onboarding
-          npm run smoke:auth-sessions
-          npm run smoke:process-lifecycle
-          npm run smoke:lane-stream
-          npm run smoke:streams
-          npm run smoke:orchestrator-lifecycle
-          npm run smoke:orchestrator-executor
-
-      - name: Audit production dependencies
-        run: npm audit --omit=dev
-
-  # iOS Safari uses WebKit, but the job above only runs Chromium. The recurring
-  # mobile regressions (drawer pointer-events, prefers-color-scheme dark-mode) are
-  # exactly the engine-sensitive class WebKit catches and Chromium misses. Its own
-  # job so it runs in parallel and never slows the Chromium path.
-  verify-webkit:
-    name: verify-webkit
-    runs-on: ubuntu-24.04
-    timeout-minutes: 20
-
-    steps:
-      - name: Check out repository
-        uses: actions/checkout@v6
-        with:
-          persist-credentials: false
-
-      - name: Set up Node
-        uses: actions/setup-node@v6
-        with:
-          node-version: 24
-          cache: npm
-
-      - name: Install dependencies
-        run: npm ci --ignore-scripts
-
-      - name: Install Playwright WebKit
-        run: npx playwright install --with-deps webkit
-
-      - name: Screen proofs under WebKit (iOS Safari engine)
-        # The engine-sensitive mobile screens (real touch drawer + live
-        # prefers-color-scheme) run under WebKit. mobile-nav reaches the remote
-        # UI via the public *.localtest.me wildcard (WebKit has no host-resolver
-        # launch flag); theme-system needs no remote host.
-        run: npm run smoke:screens-webkit
+      - name: Test
+        run: go test -race ./...

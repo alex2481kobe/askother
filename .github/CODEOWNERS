@@ -1,19 +1,15 @@
-# Code owners for security-sensitive paths: app source (auth, tool leases,
-# executor spawning, credential handling, URL policy, admin routes, render layer),
-# build/dependency config, workflows, and governance docs. Changes here
-# require code-owner review.
-/src/ @alex2481kobe
-/public/ @alex2481kobe
+# Code owners for sensitive paths: the code that starts and supervises worker
+# processes, builds their environment and stores run data, plus build config,
+# workflows and governance docs. Changes here need code owner review.
+/cmd/ @alex2481kobe
+/internal/ @alex2481kobe
+/go.mod @alex2481kobe
 /.github/ @alex2481kobe
-/package.json @alex2481kobe
-/package-lock.json @alex2481kobe
-/.npmrc @alex2481kobe
-/scripts/ @alex2481kobe
-/public/service-worker.js @alex2481kobe
-/public/manifest.webmanifest @alex2481kobe
+/.gitignore @alex2481kobe
 /SECURITY.md @alex2481kobe
 /CONTRIBUTING.md @alex2481kobe
 /SUPPORT.md @alex2481kobe
+/CODE_OF_CONDUCT.md @alex2481kobe
 /LICENSE @alex2481kobe
 /AGENTS.md @alex2481kobe
 /CLAUDE.md @alex2481kobe

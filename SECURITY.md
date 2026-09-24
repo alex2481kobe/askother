@@ -1,100 +1,53 @@
 # Security Policy
 
-Orca controls local automation and private operator access, so security
-reports should avoid public disclosure of exploitable details until a fix is
-available.
-
 ## Reporting a vulnerability
 
-Please report security issues **privately** — do not open a public issue. Use
-GitHub's **"Report a vulnerability"** button on the
-[Security tab](https://github.com/alex2481kobe/orca/security/advisories/new)
-(private vulnerability reporting is enabled). We'll acknowledge the report, work
-with you on a fix, and coordinate disclosure.
+Please report security issues privately. Do not open a public issue.
 
-Do not include live API tokens, provider secrets, pairing codes, cookies,
-private hostnames, screenshots with secrets, or raw local logs in a public
-report.
+Use the **Report a vulnerability** button on the
+[Security tab](https://github.com/alex2481kobe/orca/security/advisories/new).
+We will confirm we got the report, work with you on a fix, and agree on when to
+make it public.
 
-Useful non-secret details include:
+Helpful details:
 
-- affected commit SHA,
-- operating system and architecture,
-- Node version,
-- whether the request came from the workstation browser or a paired remote
-  device,
-- exact route, MCP tool, or feature involved,
-- minimal reproduction steps,
-- expected vs. actual authorization boundary,
-- redacted logs or screenshots.
+- the commit you built from
+- your operating system and CPU type
+- your Go version, and the Claude Code or Codex version involved
+- the tool or command you used, and the smallest steps that show the problem
+- what you expected to happen, and what happened instead
+
+Do not include API keys, tokens, private host names or unredacted logs.
 
 ## Supported versions
 
-Orca is not published to a package registry and has no release artifacts — you
-run it from a git checkout. Security fixes target the current `main` branch. If
-you are on an older commit, pull `main` before reporting.
+Orca has no releases yet. You build it from source. Security fixes go to the
+`main` branch, so please check the latest `main` before reporting.
 
-## Security model summary
+## What Orca protects, and what it does not
 
-- The HTTP server binds to `127.0.0.1` by default.
-- Direct (non-proxied) requests are gated by an anti-DNS-rebinding Host-header
-  allowlist, so a page that rebinds its domain to loopback cannot inherit the
-  local bootstrap-admin trust. The admin API token is held in memory only (never
-  in web storage).
-- Public unauthenticated routes are limited to liveness (`GET /api/health`),
-  auth status (`GET /api/auth/status`), and the static shell. Every other
-  `/api/*` route refuses unauthenticated callers.
-- There are two authenticated tiers:
-  - **operator** — an API token, loopback bootstrap when no token is set, or a
-    paired browser session. Operators get workflow reads **and writes**.
-  - **admin** — an API token or loopback bootstrap only. Workstation-level
-    actions live here.
-- A paired remote device (for example, a phone) is an **operator, not an
-  admin**. It can read the workspace and it can use the dashboard's break-glass
-  controls: stop an executor, stop the agents under an orchestrator, close an
-  agent. It cannot mint pairing codes, change private-access/Tailscale Serve
-  settings, revoke another device's session, mint host-level MCP credentials,
-  run a fleet-wide stop, or grant a lane unsandboxed permissions. Those require
-  workstation admin auth.
-- The dashboard is a monitoring surface with deliberate break-glass controls. It
-  is not an agent console: there is no chat, no prompt box, and no way to type
-  into a running agent from it. Orchestration is driven by agents over MCP.
-- Tailscale Serve is private tailnet access only. Tailscale Funnel is not part
-  of the security model.
-- Provider secrets, pairing codes, cookies, and API tokens must never be
-  committed or written into generated artifacts.
+Orca starts agent CLIs (Claude Code and Codex) and records their results. It is
+**not a security boundary** and adds no sandbox of its own.
 
-## Repository hardening
+- **Modes are passed through.** The mode an agent picks goes straight to the
+  worker CLI, and that CLI enforces it. If the CLI allows something in that
+  mode, Orca does not stop it. The default mode is the most careful one each
+  CLI offers.
+- **Worker environments use an allowlist.** A worker gets only a short list of
+  environment variables (such as `PATH`, `HOME`, `USER`, `SHELL`, `LANG`,
+  `TMPDIR`, `TERM`, `LC_*` and `ORCA_HOME`). Everything else is dropped,
+  including the calling agent's own session variables and tokens.
+- **Local state is private.** Run records and answers live in
+  `~/.local/state/orca` (or `ORCA_HOME`). The folder is created with mode
+  `0700` and the files with mode `0600`, so only your user can read them.
+- **Nothing listens on the network.** Orca has no server and no open port.
+  Agents reach it over standard input and output.
+- **Anyone who can run programs as your user can use Orca.** It does not check
+  who is calling it.
 
-- GitHub Actions are manual-only by default, dispatched by a maintainer, because
-  the third-party contribution policy is intentionally conservative.
-- Pull requests from forks should be reviewed before workflows are run,
-  especially when they change `.github/workflows/`, dependency manifests,
-  scripts, or service-worker files.
-- Do not use `pull_request_target` for untrusted code paths. Do not add
-  automatic `push`, `pull_request`, or scheduled workflow triggers without
-  owner review.
-- The default `GITHUB_TOKEN` permission should remain read-only, and workflows
-  should not receive secrets from fork pull requests.
-- The `main` branch is protected: merges go through a pull request with
-  CODEOWNERS review and resolved conversations, and force-pushes and branch
-  deletion are blocked. If automatic CI is later enabled, passing CI is also
-  required.
-- Changes to workflows, dependencies, scripts, service-worker behavior, security
-  policy, license, or contribution policy are owner-review paths.
+## Repository safety
 
-## Dependency audits
-
-`npm run audit` is exactly `npm audit --omit=dev` — a production-dependency
-audit of this repo's npm tree. Orca's source is JavaScript only; there is no
-native build in the tree. The single runtime dependency is `@lydell/node-pty`
-(the PTY behind interactive CLI executors, currently pinned to a beta); the rest
-are dev-only (`playwright`, `typescript`, `@types/node`).
-
-Run the audit yourself for the current answer. A snapshot of audit results
-committed to a doc goes stale the moment a new advisory lands, so this repo
-does not publish one.
-
-`npm test` and the `smoke:*` gates cover Orca's own security behavior: auth
-tiers, the unauthenticated-route sweep, SSRF/URL policy, secret redaction, path
-containment, rate limits, prototype-pollution rejection, and XSS-safe rendering.
+- Continuous integration uses read-only permissions and no secrets.
+- Outside pull requests are reviewed before any workflow runs on them.
+- Changes to `.github/`, `go.mod`, this policy, the license or the
+  contribution guide need owner review.

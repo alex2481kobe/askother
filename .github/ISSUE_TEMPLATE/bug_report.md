@@ -12,11 +12,11 @@ What happened?
 
 ## Environment
 
-- Orca commit SHA:
-- OS and architecture:
-- Node version:
-- Accessed from: workstation browser, or a paired remote device over Tailscale:
-- CLI agent involved (Claude Code, Codex, …), if any:
+- Orca commit or `orca version`:
+- OS and CPU type:
+- Go version:
+- Calling agent (Claude Code or Codex) and its version:
+- Worker (claude or codex) and its version:
 
 ## Steps to reproduce
 
@@ -30,18 +30,10 @@ What did you expect to happen?
 
 ## Actual behavior
 
-What happened instead?
+What happened instead? Include the `orca wait` status line or the tool reply if
+you have it.
 
-## Verification
+## Notes
 
-Commands run:
-
-```text
-
-```
-
-## Logs or screenshots
-
-Paste only redacted output. Do not include API tokens, provider secrets,
-pairing codes, cookies, private hostnames, or screenshots containing sensitive
-data.
+Paste only redacted output. Do not include API keys, tokens, private host
+names, or file paths that name private projects.

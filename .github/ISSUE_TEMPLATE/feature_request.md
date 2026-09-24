@@ -1,6 +1,6 @@
 ---
 name: Feature request
-about: Propose a new capability or improvement for Orca
+about: Propose an improvement for Orca
 title: "[Feature]: "
 labels: enhancement
 assignees: ""
@@ -8,29 +8,18 @@ assignees: ""
 
 ## Use case
 
-What are you trying to accomplish? Describe the workflow or problem this
-feature would address.
+What are you trying to do, and what gets in the way today?
 
 ## Proposed behavior
 
-What should Orca do? Describe the feature from the operator's point of view.
+What should Orca do?
 
 ## Alternatives considered
 
-What workarounds or alternatives have you tried or ruled out?
+What have you tried or ruled out?
 
-## Scope and safety
+## Scope
 
-- Does this touch privileged surfaces (executor spawning, shell execution,
-  remote/Tailscale access, secrets, file mutation)? If so, describe the policy,
-  approval, and audit expectations.
-- Which surface: the MCP tool contract, the daemon/API, or the dashboard?
-- Orca is deliberately a small harness for the CLI agents you already run — it
-  ships no agent, no model, no keys, and no chat UI. Say how the proposal fits
-  that scope.
-
-## Additional context
-
-Anything else (mockups, references). Paste only redacted output. Do not include
-API tokens, provider secrets, pairing codes, cookies, private hostnames, or
-screenshots containing sensitive data.
+Orca is kept small on purpose: it starts agent CLIs, reports when they finish,
+and returns their answers. It is not a framework, a scheduler or a sandbox.
+Say how the proposal fits that scope, and what real problem it solves.

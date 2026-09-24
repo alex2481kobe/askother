@@ -1,81 +1,63 @@
 # Contributing
 
-Orca is a local-first daemon with security-sensitive surfaces: local files,
-spawned CLI processes, agent tool leases, private network access, and logs. Keep
-changes scoped and prove security-sensitive behavior with tests or smoke gates.
+Thanks for helping. Orca is meant to stay small, so the best changes are short,
+well tested and fix a real problem.
 
-## Local setup
+## Build and test
 
-```sh
-npm ci --ignore-scripts
-ORCA_STATE_DIR="$PWD/.orca" ORCA_REPO_ROOTS="$PWD" npm start
-```
-
-A development daemon runs in the foreground with its own state (`.orca/` in the
-clone, which git ignores) and its own fence (the clone). Pin both: without
-`ORCA_STATE_DIR` it would use the per-user state directory a real install uses.
-If a real Orca already holds port 3000, add `PORT=3100`.
-
-Open <http://127.0.0.1:3000/>. On loopback with no API token set, the local
-process is trusted as admin so you can develop without wiring auth. To exercise the
-hardened path instead, set a token:
+You need Go 1.26 or newer. Nothing else.
 
 ```sh
-ORCA_API_TOKEN="$(openssl rand -hex 32)" ORCA_STATE_DIR="$PWD/.orca" ORCA_REPO_ROOTS="$PWD" npm start
+go build -trimpath ./...
+go vet ./...
+go test -race ./...
 ```
 
-## Before opening a pull request
+Run all three before you open a pull request. `gofmt -l .` should print nothing.
 
-Run the smallest relevant checks for your change. For broad changes, run what CI
-runs:
+## Rules for code
 
-```sh
-npm run typecheck:imports
-npm run smoke:no-hardcoded-colors
-npm test                    # the full node --test suite
-npm run smoke               # full-flow gate
-npm run smoke:screens       # 7 browser screen proofs (Chromium)
-npm run smoke:unauth-sweep  # every mutating route must refuse anonymous callers
-git diff --check
-```
+- **Standard library only.** Do not add modules to `go.mod`.
+- **Keep it small.** Add a file, flag or option only when a real use or a real
+  failure needs it. Aim for files of about 200 lines.
+- **Comments explain behavior in plain words.**
 
-Useful extras that are **not** in CI (run them when your change touches the area):
-`smoke:screens-webkit` (iOS Safari engine), `smoke:canvas-perf` (dashboard FPS/heap),
-`smoke:real-executor` (spawns a real CLI agent), `smoke:mcp-cli-handshake`,
-`smoke:private-access`.
+## Rules for tests
 
-If you change anything the browser renders, run `smoke:screens` — a screenshot
-harness catches layout regressions that unit tests cannot.
+- **Show that a test can fail.** Before you trust a new test, break the code it
+  checks on purpose, watch the test fail, then put the code back. A test that
+  was never seen failing proves nothing. Say in your pull request what you
+  broke and how the test caught it.
+- **Never let tests reach the real CLIs.** Tests use a fake worker program that
+  imitates `claude` and `codex`. Every test process gets a minimal environment:
+  `PATH=/usr/bin:/bin`, a temporary `HOME`, and temporary `ORCA_HOME` and
+  `ORCA_CONFIG`. Worker binaries come only from that temporary config. If a
+  test inherited your real `PATH`, one mistake could start a real agent,
+  spend real model tokens, and touch real files.
+- **Tests that call the real CLIs are opt-in.** They sit behind the `realcli`
+  build tag and run only when you ask for them, for example
+  `go test -tags realcli -run RealClaude ./internal/worker`.
+- **Test data is made up.** Use synthetic paths such as `/synthetic/user`.
+  Never copy real session logs, run records or home paths into the repo.
+- **Clean up.** A test must not leave processes running. After a test run,
+  no `orca supervise` or fake worker process should remain.
 
-## Security expectations
+## Pull requests
 
-- Do not commit `.env` files, API keys, pairing codes, auth cookies, generated
-  logs, screenshots, or `.orca/` state.
-- GitHub Actions are manual-only by default. Do not add automatic `push`,
-  `pull_request`, `pull_request_target`, or scheduled workflow triggers without
-  owner review.
-- Fork PRs should be reviewed before any maintainer runs workflows against
-  them. Never expose repository secrets to untrusted pull request code.
-- Dependency installs use repo npm guardrails. Do not bypass `ignore-scripts`,
-  `allow-git=none`, `min-release-age=30`, exact-version saves, or production
-  audit checks without calling it out for owner review.
-- Do not add public tunnels or default public exposure. Tailscale Funnel is not
-  part of the security model.
-- Keep the server authoritative for pairing, live links, MCP tools, executor
-  lifecycle, cleanup, and route authorization. A client must never be able to
-  grant itself a tool the server did not lease it.
-- Mutating browser-session routes need same-origin protection. Paired phone
-  browsers are operator sessions, not workstation admins.
-
-## Pull request shape
-
-- Explain what changed and which checks passed.
-- Include screenshots only when UI changed.
-- Keep unrelated refactors out of the PR.
-- Changes to `.github/`, dependencies, scripts, the service worker, license,
-  security policy, or contribution policy require owner review before merge.
+- Explain what changed and which checks you ran.
+- Keep unrelated changes out of the pull request.
+- First-time and outside contributors may wait for a maintainer to approve
+  workflow runs. Outside pull requests are reviewed before any workflow runs
+  on them.
+- Changes to `.github/`, `go.mod`, `SECURITY.md`, this file, `LICENSE`,
+  `AGENTS.md` or `CLAUDE.md` need owner review. Maintainers may ask for smaller
+  pull requests when these change.
+- Never commit secrets, tokens, API keys, `.env` files, logs, or absolute paths
+  from your machine.
+- Workflows must keep read-only permissions and must not use
+  `pull_request_target` or receive secrets.
 
 ## License
 
-Contributions are accepted under `Apache-2.0`. By contributing, you agree that
+Contributions are accepted under Apache-2.0. By contributing, you agree that
 your contribution can be distributed under that license.
