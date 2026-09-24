@@ -5,8 +5,8 @@ for what AskOther does. `CONTRIBUTING.md` has the full test rules.
 
 ## Layout
 
-- `cmd/askother/`: the `askother` command: `mcp`, `wait`, `help`, `version`, and the
-  hidden `supervise` step that watches one run.
+- `cmd/askother/`: the `askother` command: `mcp`, `wait`, `ui`, `help`, `version`,
+  and the hidden `supervise` step that watches one run.
 - `internal/run/`: run records on disk, locks, atomic writes, and worker
   process groups.
 - `internal/lifecycle/`: starting, continuing, supervising, stopping, waiting
@@ -19,8 +19,10 @@ for what AskOther does. `CONTRIBUTING.md` has the full test rules.
   binaries, the worker environment allowlist, and caller identity.
 - `internal/fakeworker/`, `internal/testutil/`: the fake worker and helpers
   that tests use instead of the real CLIs.
+- `internal/ui/`: the local run viewer that `askother ui` serves.
 - `internal/e2e/`: end to end tests on the built binary.
-- `assets/`: the logo.
+- `assets/`: the logo, favicon, provider icons and README screenshot.
+- `skills/askother/`: the short agent skill users can install.
 
 ## Commands
 
