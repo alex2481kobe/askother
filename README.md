@@ -1,35 +1,58 @@
-# AskOther
+<p align="center">
+  <img src="assets/askother-mark.png" alt="AskOther" width="140" height="140" />
+</p>
 
-<p align="center"><img src="assets/askother-mark.png" alt="AskOther logo" width="160" height="160"></p>
+<h1 align="center">AskOther</h1>
 
-Let Claude Code and Codex ask each other for help, right from the agent session you already use. Ask the other agent for a second opinion, a review, or a hand with the work, and get its answer back in your session.
+<p align="center">
+  <strong>Let Claude Code and Codex ask each other for help.</strong><br />
+  A second opinion, a review, or a hand with the work, from the session you already use.
+</p>
 
-![AskOther run tree with sample data](assets/ui-light.png)
+<p align="center">
+  <a href="#get-started">Get started</a> ·
+  <a href="#what-you-can-ask">What you can ask</a> ·
+  <a href="USAGE.md">Usage and settings</a>
+</p>
 
-## Set it up
+<img src="assets/ui-light.png" alt="The AskOther run tree in the browser, with sample data" width="912" />
 
-Paste this to Claude Code or Codex:
+AskOther is one small program. Your agent starts the other agent, waits for it to finish, and reads its answer, and you can follow up or stop it at any time. Run `askother ui` to watch every run in your browser.
+
+## Get started
+
+**macOS or Linux**, with Go 1.26 or newer and Claude Code or Codex.
+
+Paste this to your agent:
 
 ```text
-Set up AskOther for me (https://github.com/alex2481kobe/askother).
-1. Install it: go install github.com/alex2481kobe/askother/cmd/askother@latest
-2. Run `askother help` and follow its Setup section to register AskOther
-   with Claude Code and Codex, whichever of them I have installed.
-3. Tell me to start a new session when you are done.
+Set up AskOther from https://github.com/alex2481kobe/askother.
+Install it with: go install github.com/alex2481kobe/askother/cmd/askother@latest
+Then run `askother help` and follow its Setup section to register it
+with Claude Code and Codex, whichever I have. Tell me when to start a new session.
 ```
 
-It needs Go 1.26 or newer.
+Prefer to do it yourself? See [setup by hand](USAGE.md#set-up-by-hand).
 
-## Use it
+## What you can ask
 
-In a new session, just ask. For example:
+In a new session, copy a prompt:
 
-> Ask Codex to review this change and tell me what it finds.
+```text
+Ask Codex to review this change and tell me what it finds.
+```
 
-Run `askother ui` to watch your runs in the browser.
+```text
+Ask Claude Code for a second opinion on this plan before we start.
+```
+
+```text
+Have Codex write the tests for this function while you keep going,
+then show me what it wrote.
+```
 
 ## Works with
 
-Claude Code and Codex, in the terminal and in the Codex desktop app, on macOS and Linux. Other CLI agents can be added by writing an adapter. A Jev adapter is planned.
+Claude Code and Codex, in the terminal and in the Codex desktop app. Other CLI agents can be added with an adapter, and a Jev adapter is planned.
 
-Setup by hand, tools, modes and files: [USAGE.md](USAGE.md). License: Apache-2.0.
+Apache-2.0. The Claude Code and Codex icons in the UI belong to Anthropic and OpenAI and only label which worker is which.
