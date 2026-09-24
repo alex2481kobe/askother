@@ -179,7 +179,7 @@ func eventually(d time.Duration, cond func() bool) bool {
 // information only.
 func TestDetachedSurvivesLauncher(t *testing.T) {
 	lockPath, sup := launch(t)
-	sid, err := syscall.Getsid(sup)
+	sid, err := supervisorSessionID(sup)
 	if err != nil || sid != sup {
 		t.Fatalf("supervisor sid %d (%v), want its own session %d", sid, err, sup)
 	}
