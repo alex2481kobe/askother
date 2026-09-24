@@ -7,6 +7,7 @@ import (
 	"errors"
 	"os"
 	"path/filepath"
+	"regexp"
 	"sort"
 	"strings"
 	"time"
@@ -48,15 +49,14 @@ func NewID() (string, error) {
 	return time.Now().UTC().Format("20060102T150405Z") + "-" + hex.EncodeToString(b), nil
 }
 
+// validID is the only shape a run id may have: 1 to 128 letters, digits and
+// '-'. No '/' or '.', so an id can never name a path outside runs/.
+var validID = regexp.MustCompile(`^[A-Za-z0-9-]{1,128}$`)
+
 // checkID rejects anything that could escape runs/ or match unrelated files.
 func checkID(id string) error {
-	if id == "" || len(id) > 128 {
-		return Errorf(CodeInvalidInput, "run id must be 1 to 128 characters")
-	}
-	for _, c := range id {
-		if !(c >= '0' && c <= '9' || c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z' || c == '-') {
-			return Errorf(CodeInvalidInput, "run id %q has characters other than letters, digits and '-'", id)
-		}
+	if !validID.MatchString(id) {
+		return Errorf(CodeInvalidInput, "run id %q must be 1 to 128 letters, digits or '-'", id)
 	}
 	return nil
 }

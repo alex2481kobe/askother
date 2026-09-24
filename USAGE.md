@@ -26,7 +26,7 @@ args = ["mcp"]
 default_tools_approval_mode = "approve"
 ```
 
-Start a new agent session afterwards.
+Optionally copy `skills/askother` from this repo into `~/.claude/skills/` and `~/.codex/skills/`, so agents know when and how to use AskOther. Start a new agent session afterwards.
 
 ## Good to know
 

@@ -29,7 +29,9 @@ Paste this to your agent:
 Set up AskOther from https://github.com/alex2481kobe/askother.
 Install it with: go install github.com/alex2481kobe/askother/cmd/askother@latest
 Then run `askother help` and follow its Setup section to register it
-with Claude Code and Codex, whichever I have. Tell me when to start a new session.
+with Claude Code and Codex, whichever I have. Also copy the repo's
+skills/askother folder into their skills folders.
+Tell me when to start a new session.
 ```
 
 Prefer to do it yourself? See [setup by hand](USAGE.md#set-up-by-hand).

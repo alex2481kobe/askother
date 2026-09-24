@@ -6,6 +6,7 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
+	"strings"
 	"sync"
 	"syscall"
 	"testing"
@@ -215,5 +216,28 @@ func TestRemoveCutShortNeverLeavesDoneWithoutAnswer(t *testing.T) {
 	}
 	if _, err := os.Stat(s.file(id, ".lock")); !errors.Is(err, os.ErrNotExist) {
 		t.Fatalf("lock left after removal: %v", err)
+	}
+}
+
+func TestRunIDsCannotEscapeRunsDir(t *testing.T) {
+	s, err := Open(t.TempDir())
+	if err != nil {
+		t.Fatal(err)
+	}
+	bad := []string{"", ".", "..", "../x", "a/b", "/etc/passwd", "x.json", "x\x00y", "runé", strings.Repeat("a", 129)}
+	for _, id := range bad {
+		if err := checkID(id); !errors.Is(err, CodeInvalidInput) {
+			t.Errorf("checkID(%q) = %v, want INVALID_INPUT", id, err)
+		}
+		if _, err := s.Read(id); !errors.Is(err, CodeInvalidInput) {
+			t.Errorf("Read(%q) = %v, want INVALID_INPUT", id, err)
+		}
+	}
+	good, err := NewID()
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := checkID(good); err != nil {
+		t.Errorf("checkID(NewID()) = %v", err)
 	}
 }
