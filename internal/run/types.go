@@ -66,6 +66,7 @@ type Run struct {
 
 	CallerID     string       `json:"caller_id"`
 	CallerSource CallerSource `json:"caller_source"`
+	ParentID     *string      `json:"parent_id,omitempty"`
 	PreviousID   *string      `json:"previous_id"`
 
 	Request Request `json:"request"`
@@ -92,6 +93,7 @@ type Run struct {
 	StopRequestedAt *time.Time  `json:"stop_requested_at,omitempty"`
 	StopReason      *StopReason `json:"stop_reason"`
 	FirstReadAt     *time.Time  `json:"first_read_at,omitempty"`
+	UIHiddenAt      *time.Time  `json:"ui_hidden_at,omitempty"`
 }
 
 // Request is the normalized request. Mode is the mode Orca passed, so it is

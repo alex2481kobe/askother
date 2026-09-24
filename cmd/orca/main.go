@@ -39,6 +39,8 @@ func dispatch(args []string, stdout, stderr io.Writer) int {
 		return cmdSupervise(rest)
 	case "wait":
 		return cmdWait(rest, stdout, stderr)
+	case "ui":
+		return cmdUI(rest, stdout, stderr)
 	case "help", "--help", "-h":
 		return cmdHelp(stdout, stderr)
 	case "version", "--version":

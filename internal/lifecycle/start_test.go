@@ -51,6 +51,25 @@ func TestStartReturnsRunningRecord(t *testing.T) {
 	}
 }
 
+func TestStartLinksNestedWorkerToItsParentRun(t *testing.T) {
+	d := rDeps(t, rModeReady)
+	parent, _, err := Start(d, Caller{ID: "driver", Source: run.SourceCodex}, rStartReq(t, "parent"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	d.Env["ORCA_RUN_ID"] = parent.ID
+	child, _, err := Start(d, Caller{ID: "child-agent", Source: run.SourceClaude}, rStartReq(t, "child"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if child.ParentID == nil || *child.ParentID != parent.ID {
+		t.Fatalf("parent_id = %v, want %s", child.ParentID, parent.ID)
+	}
+	if child.CallerSource != run.SourceClaude {
+		t.Fatalf("child caller source = %s, want claude", child.CallerSource)
+	}
+}
+
 func TestStartKeyDedupe(t *testing.T) {
 	d := rDeps(t, rModeReady)
 	req := rStartReq(t, "k1")

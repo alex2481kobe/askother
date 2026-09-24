@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Orca</title>
+  <link rel="icon" href="/favicon.ico" type="image/png">
+  <link rel="stylesheet" href="/ui.css">
+  <script src="/ui.js" defer></script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand"><img src="/assets/orca.png" alt=""><span>Orca</span></div>
+    <div class="theme-control">
+      <span class="theme-label" aria-hidden="true">☀</span>
+      <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Switch to dark mode" aria-pressed="false"><span></span></button>
+      <span class="theme-label moon" aria-hidden="true">☾</span>
+    </div>
+  </header>
+  <main class="shell">
+    <aside class="sessions" aria-label="Sessions">
+      <h2>Sessions</h2>
+      <div id="session-list" class="session-list"></div>
+    </aside>
+    <section class="workspace" aria-label="Run tree">
+      <div class="workspace-actions"><button id="clear-finished" type="button" class="subtle-button" hidden><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M9 7V4h6v3M6.5 7l.8 12a2 2 0 0 0 2 1.8h5.4a2 2 0 0 0 2-1.8l.8-12M10 11v6M14 11v6"/></svg><span>Clear finished</span></button></div>
+      <div id="viewport" class="viewport" tabindex="0" aria-label="Run tree. Drag to pan, scroll to zoom.">
+        <div id="world" class="world">
+          <svg id="edges" class="edges" aria-hidden="true"></svg>
+          <div id="nodes" class="nodes"></div>
+        </div>
+        <div id="empty" class="empty" hidden>No Orca runs yet</div>
+      </div>
+      <div class="zoom-controls" role="group" aria-label="Tree zoom">
+        <button id="zoom-in" type="button" aria-label="Zoom in" title="Zoom in">+</button>
+        <button id="zoom-out" type="button" aria-label="Zoom out" title="Zoom out">−</button>
+        <span class="zoom-divider" aria-hidden="true"></span>
+        <button id="zoom-fit" type="button" aria-label="Fit tree to view" title="Fit tree to view">Fit</button>
+      </div>
+    </section>
+    <aside id="detail" class="detail" aria-label="Run details" hidden>
+      <button id="detail-close" class="detail-close" type="button" aria-label="Close run details">×</button>
+      <div id="detail-body" class="detail-body"></div>
+    </aside>
+  </main>
+  <div id="notice" class="notice" role="status" aria-live="polite" hidden></div>
+</body>
+</html>

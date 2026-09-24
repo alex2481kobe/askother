@@ -14,8 +14,8 @@ import (
 	"github.com/alex2481kobe/orca/internal/worker"
 )
 
-// The worker env is the allowlist only: no caller harness ids and no
-// ORCA_RUN_ID reach the worker, and no Orca MCP entry is added to its argv.
+// The worker env carries its own ORCA_RUN_ID, but no caller harness ids or
+// inherited parent id, and no Orca MCP entry is added to its argv.
 func TestSuperviseWorkerEnv(t *testing.T) {
 	for _, dialect := range []string{"codex", "claude"} {
 		t.Run(dialect, func(t *testing.T) {
@@ -26,10 +26,17 @@ func TestSuperviseWorkerEnv(t *testing.T) {
 				t.Fatalf("Supervise = %d", code)
 			}
 			fr := testutil.ReadFakeRecord(t, rec)
+			foundRunID := false
 			for _, n := range fr.EnvNames {
-				if strings.HasPrefix(n, "CLAUDE") || strings.HasPrefix(n, "CODEX_") || n == "ORCA_RUN_ID" {
+				if n == "ORCA_RUN_ID" {
+					foundRunID = true
+				}
+				if strings.HasPrefix(n, "CLAUDE") || strings.HasPrefix(n, "CODEX_") {
 					t.Errorf("worker env has %s", n)
 				}
+			}
+			if !foundRunID {
+				t.Error("worker env lacks ORCA_RUN_ID")
 			}
 			if argv := strings.Join(fr.Argv, " "); strings.Contains(argv, "mcp") {
 				t.Errorf("worker argv mentions mcp: %s", argv)

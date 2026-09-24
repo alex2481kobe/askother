@@ -13,6 +13,7 @@ import (
 const usage = `Usage:
   orca mcp                                  stdio MCP server; a harness starts it (see Setup)
   orca wait <id>... [--any] [--timeout D]   block until the runs end; one status line per run
+  orca ui                                   open the local run viewer until Ctrl-C
   orca help                                 this help
   orca version                              print the version
 

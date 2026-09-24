@@ -72,10 +72,17 @@ func TestClaudeClientDirection(t *testing.T) {
 		t.Fatalf("caller: %q %q", r.CallerID, r.CallerSource)
 	}
 	fake := e.fakeRecord(out.ID)
+	hasRunID := false
 	for _, n := range fake.EnvNames {
-		if n == "CLAUDE_CODE_SESSION_ID" || n == "ORCA_RUN_ID" {
+		if n == "CLAUDE_CODE_SESSION_ID" {
 			t.Fatalf("worker env has %s: %v", n, fake.EnvNames)
 		}
+		if n == "ORCA_RUN_ID" {
+			hasRunID = true
+		}
+	}
+	if !hasRunID {
+		t.Fatalf("worker env lacks ORCA_RUN_ID: %v", fake.EnvNames)
 	}
 	c.close()
 }

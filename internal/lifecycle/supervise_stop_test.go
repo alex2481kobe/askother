@@ -32,7 +32,13 @@ func TestSuperviseStop(t *testing.T) {
 			if r.State != run.StateRunning || r.Execution != run.ExecLive || r.StartedAt == nil || r.Runtime.WorkerPGID == nil {
 				t.Fatalf("at readiness: %s/%s started %v pgid %v, want running/live", r.State, r.Execution, r.StartedAt, r.Runtime.WorkerPGID)
 			}
-			time.Sleep(100 * time.Millisecond) // let ignore_term arm its handler
+			// The fake reports its session after arming its signal handler.
+			// Wait for that event instead of relying on a fixed startup delay.
+			for deadline := time.Now().Add(5 * time.Second); e.read(id).NativeSessionID == nil; time.Sleep(10 * time.Millisecond) {
+				if time.Now().After(deadline) {
+					t.Fatal("worker did not report its session")
+				}
+			}
 			asked := e.requestStop(id)
 			if got := waitCode(t, code, 5*time.Second); got != 0 {
 				t.Fatalf("Supervise = %d", got)

@@ -87,7 +87,8 @@ func Supervise(d Deps, id string, lock, ready *os.File) int {
 	})) {
 		return 1
 	}
-	w, err := run.StartWorker(cmd, r.Request.CWD, config.WorkerEnv(d.Env))
+	workerEnv := append(config.WorkerEnv(d.Env), "ORCA_RUN_ID="+id)
+	w, err := run.StartWorker(cmd, r.Request.CWD, workerEnv)
 	if err != nil {
 		return s.failNotStarted(&worker.Failure{Code: string(run.CodeWorkerFailed), Message: "start worker: " + err.Error()})
 	}

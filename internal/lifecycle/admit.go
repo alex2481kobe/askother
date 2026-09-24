@@ -110,6 +110,11 @@ func reserve(d Deps, c Caller, ad admission, r *run.Run) (*os.File, error) {
 	}
 	r.SchemaVersion, r.ID, r.Key, r.RequestSHA256 = run.SchemaVersion, id, ad.key, ad.hash
 	r.CallerID, r.CallerSource = c.ID, c.Source
+	if parent := d.Env["ORCA_RUN_ID"]; parent != "" {
+		if _, err := d.Store.Read(parent); err == nil {
+			r.ParentID = &parent
+		}
+	}
 	r.State, r.Execution, r.CreatedAt = run.StateStarting, run.ExecNotStarted, d.now()
 	if err := d.Store.Put(r); err != nil {
 		lock.Close()
