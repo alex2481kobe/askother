@@ -21,40 +21,32 @@ AskOther is one small program. Your agent starts the other agent, waits for it t
 
 ## Get started
 
-**macOS or Linux**, with Go 1.26 or newer and Claude Code or Codex.
-
-Paste this to your agent:
+Tell Claude Code or Codex:
 
 ```text
-Set up AskOther from https://github.com/alex2481kobe/askother.
-Install it with: go install github.com/alex2481kobe/askother/cmd/askother@latest
-Then run `askother help` and follow its Setup section to register it
-with Claude Code and Codex, whichever I have. Also copy the repo's
-skills/askother folder into their skills folders.
-Tell me when to start a new session.
+Install AskOther from https://github.com/alex2481kobe/askother and set it up for Claude Code and Codex.
 ```
 
-Prefer to do it yourself? See [setup by hand](USAGE.md#set-up-by-hand).
+Or do it yourself: grab a [release](https://github.com/alex2481kobe/askother/releases) or `go install` it, then run `askother help`. Full steps are in [setup by hand](USAGE.md#set-up-by-hand).
 
 ## What you can ask
 
-In a new session, copy a prompt:
+Start a new session, then just ask:
 
 ```text
-Ask Codex to review this change and tell me what it finds.
+Have Codex review my changes and tell me what it finds.
 ```
 
 ```text
-Ask Claude Code for a second opinion on this plan before we start.
+Get a second opinion from Claude on this plan before we start.
 ```
 
 ```text
-Have Codex write the tests for this function while you keep going,
-then show me what it wrote.
+Have Codex write the tests for this while you keep going.
 ```
 
 ## Works with
 
-Claude Code and Codex, in the terminal and in their desktop apps (with the `claude` and `codex` command line tools installed). Other CLI agents can be added with an adapter, and a Jev adapter is planned.
+Claude Code and Codex on macOS and Linux, in the terminal and in their desktop apps (the `claude` and `codex` command line tools need to be installed). On Windows, use WSL. Other CLI agents can be added with an adapter, and a Jev adapter is planned.
 
 Apache-2.0. The Claude Code and Codex icons in the UI belong to Anthropic and OpenAI and only label which worker is which.

@@ -2,31 +2,30 @@
 
 ## Set up by hand
 
-AskOther runs on macOS and Linux and needs Go 1.26 or newer, plus the Claude Code or Codex CLI you want to use.
+AskOther runs on macOS and Linux. On Windows, use WSL (untested). You also need the `claude` and/or `codex` command line tools.
 
-```sh
-go install github.com/alex2481kobe/askother/cmd/askother@latest
-askother help
-```
+1. **Install** one of two ways:
+   - Download the archive for your computer from [Releases](https://github.com/alex2481kobe/askother/releases), check it against `SHA256SUMS`, and put `askother` somewhere on your `PATH`, such as `~/.local/bin`.
+   - Or, with Go 1.26 or newer: `go install github.com/alex2481kobe/askother/cmd/askother@latest`
+2. **Register it.** Run `askother help`. Its Setup section prints these lines with the real path filled in.
 
-`askother help` prints the setup lines below with the real path to your binary filled in. If `askother` is not on your `PATH`, run it from your Go bin directory.
+   Claude Code:
 
-**Claude Code**
+   ```sh
+   claude mcp add -s user askother -- /path/to/askother mcp
+   ```
 
-```sh
-claude mcp add -s user askother -- /path/to/askother mcp
-```
+   Codex (CLI and desktop app), in `~/.codex/config.toml`:
 
-**Codex, CLI and desktop app**, in `~/.codex/config.toml`:
+   ```toml
+   [mcp_servers.askother]
+   command = "/path/to/askother"
+   args = ["mcp"]
+   default_tools_approval_mode = "approve"
+   ```
 
-```toml
-[mcp_servers.askother]
-command = "/path/to/askother"
-args = ["mcp"]
-default_tools_approval_mode = "approve"
-```
-
-Optionally copy `skills/askother` from this repo into `~/.claude/skills/` and `~/.codex/skills/`, so agents know when and how to use AskOther. Start a new agent session afterwards.
+3. **Optionally add the skill.** Copy `skills/askother` from this repo into `~/.claude/skills/` and `~/.codex/skills/`, so agents know when and how to use AskOther.
+4. **Start a new agent session.**
 
 ## Good to know
 
