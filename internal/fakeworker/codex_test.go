@@ -8,7 +8,7 @@ import (
 	"testing"
 	"unicode/utf8"
 
-	"github.com/alex2481kobe/orca/internal/testutil"
+	"github.com/alex2481kobe/askother/internal/testutil"
 )
 
 func codexRun(t *testing.T, scenario, arg string) (fakeRun, string) {

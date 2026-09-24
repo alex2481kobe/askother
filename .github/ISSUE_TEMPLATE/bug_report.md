@@ -1,6 +1,6 @@
 ---
 name: Bug report
-about: Report a reproducible Orca bug
+about: Report a reproducible AskOther bug
 title: "[Bug]: "
 labels: bug
 assignees: ""
@@ -12,7 +12,7 @@ What happened?
 
 ## Environment
 
-- Orca commit or `orca version`:
+- AskOther commit or `askother version`:
 - OS and CPU type:
 - Go version:
 - Calling agent (Claude Code or Codex) and its version:
@@ -30,7 +30,7 @@ What did you expect to happen?
 
 ## Actual behavior
 
-What happened instead? Include the `orca wait` status line or the tool reply if
+What happened instead? Include the `askother wait` status line or the tool reply if
 you have it.
 
 ## Notes

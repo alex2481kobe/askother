@@ -12,7 +12,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/alex2481kobe/orca/internal/run"
+	"github.com/alex2481kobe/askother/internal/run"
 )
 
 // fakeHandler: "slow" waits up to 5 s (or release/ctx), "stubborn" ignores

@@ -14,7 +14,7 @@ import (
 	"syscall"
 	"testing"
 
-	"github.com/alex2481kobe/orca/internal/testutil"
+	"github.com/alex2481kobe/askother/internal/testutil"
 )
 
 // cxRun is one fake codex run driven through Build, Consume and Finish.
@@ -167,7 +167,7 @@ func TestCodexFakeScenarios(t *testing.T) {
 	}
 }
 
-// Codex exits 0 when it cannot write -o; that is a failure, and Orca must
+// Codex exits 0 when it cannot write -o; that is a failure, and AskOther must
 // not have created the file itself.
 func TestCodexFakeMissingOFile(t *testing.T) {
 	t.Parallel()

@@ -17,7 +17,7 @@ func (Codex) Facts() Facts {
 		Modes:       slices.Clone(codexModes),
 		Pinned: []string{
 			`approval_policy="never" (headless: no human can approve an escalation; choose a stronger sandbox mode instead)`,
-			`--skip-git-repo-check (Orca accepts any existing directory)`,
+			`--skip-git-repo-check (AskOther accepts any existing directory)`,
 		},
 	}
 }

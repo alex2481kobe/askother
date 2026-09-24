@@ -12,8 +12,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/alex2481kobe/orca/internal/run"
-	"github.com/alex2481kobe/orca/internal/worker"
+	"github.com/alex2481kobe/askother/internal/run"
+	"github.com/alex2481kobe/askother/internal/worker"
 )
 
 // Stand-in supervisors for the launcher tests, so admission is tested
@@ -25,8 +25,8 @@ const (
 	rModeExit   = "r-standin-exit"       // exits without signalling
 	rModeSilent = "r-standin-silent"     // never signals, sleeps
 
-	rStoreEnv = "ORCA_R_TEST_STORE"
-	rPidsEnv  = "ORCA_R_TEST_PIDS"
+	rStoreEnv = "ASKOTHER_R_TEST_STORE"
+	rPidsEnv  = "ASKOTHER_R_TEST_PIDS"
 )
 
 func init() {

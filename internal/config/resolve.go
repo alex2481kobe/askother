@@ -25,7 +25,7 @@ func Resolve(worker, configured string, env map[string]string) (string, error) {
 	}
 	dirs := searchDirs(env)
 	for _, dir := range dirs {
-		// A relative PATH entry would resolve against whatever cwd orca has.
+		// A relative PATH entry would resolve against whatever cwd askother has.
 		if !filepath.IsAbs(dir) {
 			continue
 		}

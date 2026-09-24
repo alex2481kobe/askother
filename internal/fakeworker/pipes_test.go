@@ -7,7 +7,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/alex2481kobe/orca/internal/testutil"
+	"github.com/alex2481kobe/askother/internal/testutil"
 )
 
 // The grandchild keeps stdout open after the worker exits; a group kill

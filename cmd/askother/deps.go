@@ -5,10 +5,10 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/alex2481kobe/orca/internal/config"
-	"github.com/alex2481kobe/orca/internal/lifecycle"
-	"github.com/alex2481kobe/orca/internal/run"
-	"github.com/alex2481kobe/orca/internal/worker"
+	"github.com/alex2481kobe/askother/internal/config"
+	"github.com/alex2481kobe/askother/internal/lifecycle"
+	"github.com/alex2481kobe/askother/internal/run"
+	"github.com/alex2481kobe/askother/internal/worker"
 )
 
 // adapters are the workers this build supports, keyed by Facts().Name.
@@ -31,8 +31,8 @@ func selfPath() (string, error) {
 
 // stateDeps assembles what every command needs: the store, the adapters and
 // the environment. It never reads the config file, so a broken config
-// cannot stop `orca wait` or a supervisor. Every error is a setup problem
-// the owner must fix (bad ORCA_HOME), reported with exit 4.
+// cannot stop `askother wait` or a supervisor. Every error is a setup problem
+// the owner must fix (bad ASKOTHER_HOME), reported with exit 4.
 func stateDeps(environ []string, home string) (lifecycle.Deps, error) {
 	env := config.EnvMap(environ)
 	stateHome, err := config.StateHome(env, home)
@@ -60,8 +60,8 @@ func mcpDeps(environ []string, home string) (lifecycle.Deps, error) {
 	return d, err
 }
 
-// userHome is the home directory, which may be unknown when ORCA_HOME and
-// ORCA_CONFIG are both set.
+// userHome is the home directory, which may be unknown when ASKOTHER_HOME and
+// ASKOTHER_CONFIG are both set.
 func userHome() string {
 	home, _ := os.UserHomeDir()
 	return home

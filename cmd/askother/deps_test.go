@@ -7,14 +7,14 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/alex2481kobe/orca/internal/run"
+	"github.com/alex2481kobe/askother/internal/run"
 )
 
 func TestMCPDeps(t *testing.T) {
 	dir := t.TempDir()
 	home := filepath.Join(dir, "state")
 	cfg := filepath.Join(dir, "config.json")
-	d, err := mcpDeps([]string{"ORCA_HOME=" + home, "ORCA_CONFIG=" + cfg, "X=1"}, "")
+	d, err := mcpDeps([]string{"ASKOTHER_HOME=" + home, "ASKOTHER_CONFIG=" + cfg, "X=1"}, "")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -34,19 +34,19 @@ func TestMCPDeps(t *testing.T) {
 func TestSetupErrorsExit4(t *testing.T) {
 	dir := t.TempDir()
 	cases := map[string][4]string{
-		"relative home":   {"wait", "rel/state", filepath.Join(dir, "c.json"), "ORCA_HOME"},
-		"relative config": {"mcp", filepath.Join(dir, "s"), "rel.json", "ORCA_CONFIG"},
+		"relative home":   {"wait", "rel/state", filepath.Join(dir, "c.json"), "ASKOTHER_HOME"},
+		"relative config": {"mcp", filepath.Join(dir, "s"), "rel.json", "ASKOTHER_CONFIG"},
 	}
 	for name, c := range cases {
 		t.Run(name, func(t *testing.T) {
-			t.Setenv("ORCA_HOME", c[1])
-			t.Setenv("ORCA_CONFIG", c[2])
+			t.Setenv("ASKOTHER_HOME", c[1])
+			t.Setenv("ASKOTHER_CONFIG", c[2])
 			args := []string{c[0]}
 			if c[0] == "wait" {
 				args = append(args, "x")
 			}
 			var out, errb bytes.Buffer
-			if code := dispatch(args, &out, &errb); code != exitRefused || !strings.HasPrefix(errb.String(), "orca: ") || !strings.Contains(errb.String(), c[3]) {
+			if code := dispatch(args, &out, &errb); code != exitRefused || !strings.HasPrefix(errb.String(), "askother: ") || !strings.Contains(errb.String(), c[3]) {
 				t.Fatalf("exit %d, stderr %q", code, errb.String())
 			}
 		})
@@ -54,7 +54,7 @@ func TestSetupErrorsExit4(t *testing.T) {
 }
 
 // wait never reads the config: a broken config file, or a relative
-// ORCA_CONFIG, does not stop it from reporting a finished run.
+// ASKOTHER_CONFIG, does not stop it from reporting a finished run.
 func TestWaitIgnoresConfig(t *testing.T) {
 	dir := t.TempDir()
 	home := filepath.Join(dir, "state")
@@ -69,9 +69,9 @@ func TestWaitIgnoresConfig(t *testing.T) {
 	if err := os.WriteFile(broken, []byte(`{"cap": 0`), 0o600); err != nil {
 		t.Fatal(err)
 	}
-	t.Setenv("ORCA_HOME", home)
+	t.Setenv("ASKOTHER_HOME", home)
 	for _, cfg := range []string{broken, "rel.json"} {
-		t.Setenv("ORCA_CONFIG", cfg)
+		t.Setenv("ASKOTHER_CONFIG", cfg)
 		var out, errb bytes.Buffer
 		if code := dispatch([]string{"wait", idA}, &out, &errb); code != 0 || !strings.Contains(out.String(), " done ") {
 			t.Fatalf("config %s: exit %d, out %q, stderr %q", cfg, code, out.String(), errb.String())

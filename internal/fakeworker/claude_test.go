@@ -6,7 +6,7 @@ import (
 	"testing"
 	"unicode/utf8"
 
-	"github.com/alex2481kobe/orca/internal/testutil"
+	"github.com/alex2481kobe/askother/internal/testutil"
 )
 
 func claudeRun(t *testing.T, scenario, arg string, args ...string) fakeRun {

@@ -13,8 +13,8 @@ import (
 	"time"
 	"unicode/utf8"
 
-	"github.com/alex2481kobe/orca/internal/testutil"
-	"github.com/alex2481kobe/orca/internal/worker"
+	"github.com/alex2481kobe/askother/internal/testutil"
+	"github.com/alex2481kobe/askother/internal/worker"
 )
 
 type fake struct {
@@ -216,7 +216,7 @@ func TestExitOfSignal(t *testing.T) {
 // The worker gets exactly env, never the caller's environment, even when
 // env is empty, and stdin byte for byte, then EOF.
 func TestStartWorkerEnvAndStdin(t *testing.T) {
-	t.Setenv("ORCA_RUN_TEST_CALLER_ONLY", "1")
+	t.Setenv("ASKOTHER_RUN_TEST_CALLER_ONLY", "1")
 	run := func(cmd worker.Command, env []string) []string {
 		w, err := StartWorker(cmd, t.TempDir(), env)
 		if err != nil {

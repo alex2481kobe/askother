@@ -1,4 +1,4 @@
-// Package testutil holds helpers shared by Orca's tests.
+// Package testutil holds helpers shared by AskOther's tests.
 package testutil
 
 import (
@@ -14,7 +14,7 @@ import (
 	"testing"
 )
 
-const fakeWorkerPkg = "github.com/alex2481kobe/orca/internal/fakeworker"
+const fakeWorkerPkg = "github.com/alex2481kobe/askother/internal/fakeworker"
 
 var (
 	buildOnce sync.Once
@@ -36,7 +36,7 @@ func BuildFakeWorker(t testing.TB) (codexPath, claudePath string) {
 }
 
 func build() {
-	buildDir, buildErr = os.MkdirTemp("", "orca-fakeworker-")
+	buildDir, buildErr = os.MkdirTemp("", "askother-fakeworker-")
 	if buildErr != nil {
 		return
 	}
@@ -83,19 +83,19 @@ func linkOrCopy(src, dst string) error {
 	return out.Close()
 }
 
-// Scenario returns a copy of env with ORCA_FAKE_SCENARIO set to name and
-// ORCA_FAKE_ARG set to arg (removed when arg is empty).
+// Scenario returns a copy of env with ASKOTHER_FAKE_SCENARIO set to name and
+// ASKOTHER_FAKE_ARG set to arg (removed when arg is empty).
 func Scenario(env []string, name, arg string) []string {
-	env = setEnv(env, "ORCA_FAKE_SCENARIO", name)
+	env = setEnv(env, "ASKOTHER_FAKE_SCENARIO", name)
 	if arg == "" {
-		return unsetEnv(env, "ORCA_FAKE_ARG")
+		return unsetEnv(env, "ASKOTHER_FAKE_ARG")
 	}
-	return setEnv(env, "ORCA_FAKE_ARG", arg)
+	return setEnv(env, "ASKOTHER_FAKE_ARG", arg)
 }
 
 // WithRecord returns a copy of env that makes the fake write its record to path.
 func WithRecord(env []string, path string) []string {
-	return setEnv(env, "ORCA_FAKE_RECORD", path)
+	return setEnv(env, "ASKOTHER_FAKE_RECORD", path)
 }
 
 // setEnv returns a copy of env with every key= entry replaced by one key=val

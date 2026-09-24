@@ -40,17 +40,17 @@ func TestBuildFakeWorkerOnce(t *testing.T) {
 }
 
 func TestEnvHelpers(t *testing.T) {
-	env := []string{"A=1", "ORCA_FAKE_SCENARIO=old", "ORCA_FAKE_ARG=old", "B=2"}
+	env := []string{"A=1", "ASKOTHER_FAKE_SCENARIO=old", "ASKOTHER_FAKE_ARG=old", "B=2"}
 	got := Scenario(env, "hang", "")
-	if want := []string{"A=1", "B=2", "ORCA_FAKE_SCENARIO=hang"}; !slices.Equal(got, want) {
+	if want := []string{"A=1", "B=2", "ASKOTHER_FAKE_SCENARIO=hang"}; !slices.Equal(got, want) {
 		t.Fatalf("Scenario no arg = %v", got)
 	}
 	got = WithRecord(Scenario(env, "silent", "0.2"), "/tmp/rec.json")
-	want := []string{"A=1", "B=2", "ORCA_FAKE_SCENARIO=silent", "ORCA_FAKE_ARG=0.2", "ORCA_FAKE_RECORD=/tmp/rec.json"}
+	want := []string{"A=1", "B=2", "ASKOTHER_FAKE_SCENARIO=silent", "ASKOTHER_FAKE_ARG=0.2", "ASKOTHER_FAKE_RECORD=/tmp/rec.json"}
 	if !slices.Equal(got, want) {
 		t.Fatalf("Scenario with arg = %v", got)
 	}
-	if env[1] != "ORCA_FAKE_SCENARIO=old" {
+	if env[1] != "ASKOTHER_FAKE_SCENARIO=old" {
 		t.Fatal("Scenario modified its input")
 	}
 	if got := unsetEnv([]string{"AB=1", "A=2"}, "A"); !slices.Equal(got, []string{"AB=1"}) {
@@ -64,7 +64,7 @@ func TestFakeRecordMatchesProgram(t *testing.T) {
 	_, claude := BuildFakeWorker(t)
 	dir := t.TempDir()
 	rec := filepath.Join(dir, "rec.json")
-	env := WithRecord(Scenario([]string{"PATH=/usr/bin:/bin", "ORCA_HOME=secret-value"}, "grandchild_holds_pipe", "5s"), rec)
+	env := WithRecord(Scenario([]string{"PATH=/usr/bin:/bin", "ASKOTHER_HOME=secret-value"}, "grandchild_holds_pipe", "5s"), rec)
 	args := []string{"--print", "--output-format", "stream-json", "--verbose", "--permission-mode", "dontAsk",
 		"--permission-prompts", "none", "--model", "m1"}
 	cmd := GroupCommand(t, claude, env, args...)
@@ -85,7 +85,7 @@ func TestFakeRecordMatchesProgram(t *testing.T) {
 	KillOnCleanup(t, r.GrandchildPID)
 	if r.Dialect != "claude" || r.Scenario != "grandchild_holds_pipe" || r.Arg != "5s" || r.Stdin != "hello" ||
 		r.Invocation.Model != "m1" || r.Invocation.PermissionMode != "dontAsk" || r.SessionID == "" ||
-		r.Answer == nil || r.Answer.Bytes == 0 || r.GrandchildPID == 0 || !slices.Contains(r.EnvNames, "ORCA_HOME") ||
+		r.Answer == nil || r.Answer.Bytes == 0 || r.GrandchildPID == 0 || !slices.Contains(r.EnvNames, "ASKOTHER_HOME") ||
 		!slices.Equal(r.EnvNames, slices.Sorted(slices.Values(r.EnvNames))) {
 		t.Fatalf("record %+v", r)
 	}

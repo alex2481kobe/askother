@@ -3,7 +3,7 @@ package lifecycle
 import (
 	"testing"
 
-	"github.com/alex2481kobe/orca/internal/run"
+	"github.com/alex2481kobe/askother/internal/run"
 )
 
 func TestDerive(t *testing.T) {

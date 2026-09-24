@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/alex2481kobe/orca/internal/run"
+	"github.com/alex2481kobe/askother/internal/run"
 )
 
 func TestDecodeStrictAcceptsValidInput(t *testing.T) {

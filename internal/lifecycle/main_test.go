@@ -5,12 +5,12 @@ import (
 	"os"
 	"testing"
 
-	"github.com/alex2481kobe/orca/internal/testutil"
+	"github.com/alex2481kobe/askother/internal/testutil"
 )
 
 // helperEnv selects a helper mode when the test binary re-executes itself as
 // a subprocess. Each unit registers its modes from its own test file's init.
-const helperEnv = "ORCA_LIFECYCLE_TEST_HELPER"
+const helperEnv = "ASKOTHER_LIFECYCLE_TEST_HELPER"
 
 var helpers = map[string]func(args []string) error{}
 

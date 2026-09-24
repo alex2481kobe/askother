@@ -27,7 +27,7 @@ func (c *claude) model() string {
 	return c.in.Model
 }
 
-// start reports the session in system/init, the only place Orca reads it from.
+// start reports the session in system/init, the only place AskOther reads it from.
 func (c *claude) start() {
 	c.rec.SessionID = c.session
 	c.rec.save()

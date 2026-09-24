@@ -6,8 +6,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/alex2481kobe/orca/internal/mcp"
-	"github.com/alex2481kobe/orca/internal/run"
+	"github.com/alex2481kobe/askother/internal/mcp"
+	"github.com/alex2481kobe/askother/internal/run"
 )
 
 // A worker that fails with only stderr to explain it (a bad flag, a login
@@ -16,9 +16,9 @@ func TestStderrOnlyFailureThroughMCP(t *testing.T) {
 	e := newEnv(t)
 	c := e.startMCP("claude-code", "CLAUDE_CODE_SESSION_ID=00000000-0000-4000-8000-00000000e2e8")
 	id, _ := startRun(c, e, "k1", "stderr_only", "error: synthetic unexpected argument")
-	code, out, _ := e.orca("wait", id)
+	code, out, _ := e.askother("wait", id)
 	if code != 1 || !strings.Contains(out, " failed (exit 1) ") || !strings.Contains(out, "synthetic unexpected argument") {
-		t.Fatalf("orca wait: exit %d %q", code, out)
+		t.Fatalf("askother wait: exit %d %q", code, out)
 	}
 	var res mcp.ResultOutput
 	c.mustTool("result", map[string]any{"id": id}, nil, &res)
@@ -35,7 +35,7 @@ func TestFailedContinuationThenResend(t *testing.T) {
 	e := newEnv(t)
 	c := e.startMCP("claude-code", "CLAUDE_CODE_SESSION_ID=00000000-0000-4000-8000-00000000e2e9")
 	first, cwd := startRun(c, e, "k1", "ok", "")
-	if code, out, _ := e.orca("wait", first); code != 0 {
+	if code, out, _ := e.askother("wait", first); code != 0 {
 		t.Fatalf("first run: exit %d %q", code, out)
 	}
 	thread := *e.record(first).NativeSessionID
@@ -43,7 +43,7 @@ func TestFailedContinuationThenResend(t *testing.T) {
 	e.scenario(cwd, "stderr_only", "error: synthetic auth failure")
 	var failed mcp.RunOutput
 	c.mustTool("send", map[string]any{"key": "k2", "id": first, "message": "next"}, nil, &failed)
-	if code, out, _ := e.orca("wait", failed.ID); code != 1 {
+	if code, out, _ := e.askother("wait", failed.ID); code != 1 {
 		t.Fatalf("failed continuation: exit %d %q", code, out)
 	}
 	if r := e.record(failed.ID); r.NativeSessionID == nil || *r.NativeSessionID != thread {
@@ -53,7 +53,7 @@ func TestFailedContinuationThenResend(t *testing.T) {
 	e.scenario(cwd, "ok", "resumed after a failure")
 	var again mcp.RunOutput
 	c.mustTool("send", map[string]any{"key": "k3", "id": failed.ID, "message": "next, again"}, nil, &again)
-	if code, out, _ := e.orca("wait", again.ID); code != 0 {
+	if code, out, _ := e.askother("wait", again.ID); code != 0 {
 		t.Fatalf("resend: exit %d %q", code, out)
 	}
 	fake := e.fakeRecord(again.ID)
@@ -96,8 +96,8 @@ func TestLostReplyRetryByKey(t *testing.T) {
 	if !out.Reused || filepath.Base(records()[0]) != out.ID+".json" {
 		t.Fatalf("retry: %+v, records %v", out, records())
 	}
-	if code, stdout, _ := e.orca("wait", out.ID); code != 0 {
-		t.Fatalf("orca wait: exit %d %q", code, stdout)
+	if code, stdout, _ := e.askother("wait", out.ID); code != 0 {
+		t.Fatalf("askother wait: exit %d %q", code, stdout)
 	}
 
 	var sent mcp.RunOutput
@@ -108,6 +108,6 @@ func TestLostReplyRetryByKey(t *testing.T) {
 	if sent.Reused || !again.Reused || again.ID != sent.ID || len(records()) != 2 {
 		t.Fatalf("send retry: %+v then %+v, %d records", sent, again, len(records()))
 	}
-	e.orca("wait", sent.ID)
+	e.askother("wait", sent.ID)
 	c2.close()
 }

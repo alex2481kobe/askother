@@ -1,7 +1,7 @@
 package lifecycle
 
 import (
-	"github.com/alex2481kobe/orca/internal/run"
+	"github.com/alex2481kobe/askother/internal/run"
 )
 
 // SendRequest is the `send` tool input. ID is a full run id.

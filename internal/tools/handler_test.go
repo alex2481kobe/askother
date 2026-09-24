@@ -10,9 +10,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/alex2481kobe/orca/internal/lifecycle"
-	"github.com/alex2481kobe/orca/internal/mcp"
-	"github.com/alex2481kobe/orca/internal/run"
+	"github.com/alex2481kobe/askother/internal/lifecycle"
+	"github.com/alex2481kobe/askother/internal/mcp"
+	"github.com/alex2481kobe/askother/internal/run"
 )
 
 func TestFactsOrder(t *testing.T) {
@@ -44,7 +44,7 @@ func TestInputValidation(t *testing.T) {
 }
 
 func TestToolError(t *testing.T) {
-	h := New(lifecycle.Deps{StateHome: "/var/orca-state"}, "i")
+	h := New(lifecycle.Deps{StateHome: "/var/askother-state"}, "i")
 	for _, c := range []struct {
 		err  error
 		code run.Code
@@ -57,7 +57,7 @@ func TestToolError(t *testing.T) {
 		{fmt.Errorf("publish: %w", &run.StoreError{Path: "/x/a.json", Op: "dirsync", Visible: true, Err: syscall.EIO}), run.CodeStoreIO,
 			"publish: STORE_IO: dirsync a.json (visible, not durable): input/output error"},
 		{errors.New("start supervisor: exec failed"), run.CodeProtocol, "start supervisor: exec failed"},
-		{errors.New("open /var/orca-state/runs/x.json: denied"), run.CodeProtocol, "open $ORCA_HOME/runs/x.json: denied"},
+		{errors.New("open /var/askother-state/runs/x.json: denied"), run.CodeProtocol, "open $ASKOTHER_HOME/runs/x.json: denied"},
 	} {
 		got := h.toolError(c.err)
 		if got.Code != c.code || got.Message != c.msg {
@@ -71,7 +71,7 @@ func TestToolError(t *testing.T) {
 func TestStartFailureIsToolError(t *testing.T) {
 	e := newTEnv(t)
 	e.fake("codex", "ok", "")
-	e.d.Self = filepath.Join(e.dir, "no-such-orca")
+	e.d.Self = filepath.Join(e.dir, "no-such-askother")
 	_, err := call(t, e.handler(nil), callOpt{}, "run", map[string]any{"key": "k", "worker": "codex", "prompt": "p", "cwd": e.cwd})
 	wantCode(t, err, run.CodeProtocol)
 }

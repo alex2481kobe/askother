@@ -11,7 +11,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/alex2481kobe/orca/internal/run"
+	"github.com/alex2481kobe/askother/internal/run"
 )
 
 func rStartReq(t *testing.T, key string) StartRequest {
@@ -57,7 +57,7 @@ func TestStartLinksNestedWorkerToItsParentRun(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	d.Env["ORCA_RUN_ID"] = parent.ID
+	d.Env["ASKOTHER_RUN_ID"] = parent.ID
 	child, _, err := Start(d, Caller{ID: "child-agent", Source: run.SourceClaude}, rStartReq(t, "child"))
 	if err != nil {
 		t.Fatal(err)
@@ -218,7 +218,7 @@ func TestStartReadinessTimeout(t *testing.T) {
 	}
 }
 
-// Claude reports its own session id at init; Orca no longer invents one.
+// Claude reports its own session id at init; AskOther no longer invents one.
 func TestStartClaudeHasNoPresetSession(t *testing.T) {
 	d := rDeps(t, rModeReady)
 	req := rStartReq(t, "k1")

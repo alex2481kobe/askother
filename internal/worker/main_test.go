@@ -5,7 +5,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/alex2481kobe/orca/internal/testutil"
+	"github.com/alex2481kobe/askother/internal/testutil"
 )
 
 // TestMain removes the fake worker binary shared by this package's tests.

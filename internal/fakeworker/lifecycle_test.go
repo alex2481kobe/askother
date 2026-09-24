@@ -11,10 +11,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/alex2481kobe/orca/internal/testutil"
+	"github.com/alex2481kobe/askother/internal/testutil"
 )
 
-// live is a fake started with an owned stdout pipe, as Orca's supervisor
+// live is a fake started with an owned stdout pipe, as AskOther's supervisor
 // starts workers. done closes when the process has been reaped.
 type live struct {
 	cmd     *exec.Cmd

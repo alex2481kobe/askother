@@ -9,13 +9,13 @@ import (
 	"testing"
 	"time"
 
-	"github.com/alex2481kobe/orca/internal/run"
-	"github.com/alex2481kobe/orca/internal/testutil"
-	"github.com/alex2481kobe/orca/internal/worker"
+	"github.com/alex2481kobe/askother/internal/run"
+	"github.com/alex2481kobe/askother/internal/testutil"
+	"github.com/alex2481kobe/askother/internal/worker"
 )
 
-// The worker env carries its own ORCA_RUN_ID, but no caller harness ids or
-// inherited parent id, and no Orca MCP entry is added to its argv.
+// The worker env carries its own ASKOTHER_RUN_ID, but no caller harness ids or
+// inherited parent id, and no AskOther MCP entry is added to its argv.
 func TestSuperviseWorkerEnv(t *testing.T) {
 	for _, dialect := range []string{"codex", "claude"} {
 		t.Run(dialect, func(t *testing.T) {
@@ -28,7 +28,7 @@ func TestSuperviseWorkerEnv(t *testing.T) {
 			fr := testutil.ReadFakeRecord(t, rec)
 			foundRunID := false
 			for _, n := range fr.EnvNames {
-				if n == "ORCA_RUN_ID" {
+				if n == "ASKOTHER_RUN_ID" {
 					foundRunID = true
 				}
 				if strings.HasPrefix(n, "CLAUDE") || strings.HasPrefix(n, "CODEX_") {
@@ -36,7 +36,7 @@ func TestSuperviseWorkerEnv(t *testing.T) {
 				}
 			}
 			if !foundRunID {
-				t.Error("worker env lacks ORCA_RUN_ID")
+				t.Error("worker env lacks ASKOTHER_RUN_ID")
 			}
 			if argv := strings.Join(fr.Argv, " "); strings.Contains(argv, "mcp") {
 				t.Errorf("worker argv mentions mcp: %s", argv)

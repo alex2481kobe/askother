@@ -11,8 +11,8 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/alex2481kobe/orca/internal/lifecycle"
-	"github.com/alex2481kobe/orca/internal/run"
+	"github.com/alex2481kobe/askother/internal/lifecycle"
+	"github.com/alex2481kobe/askother/internal/run"
 )
 
 // Exit codes that belong to the waiter, not to run outcomes.
@@ -68,12 +68,12 @@ func parseWaitArgs(args []string) (waitArgs, error) {
 	return w, nil
 }
 
-// cmdWait is `orca wait <id>... [--any] [--timeout D]`. It only observes:
+// cmdWait is `askother wait <id>... [--any] [--timeout D]`. It only observes:
 // no write and no config is needed, so it works from a read-only sandbox.
 func cmdWait(args []string, stdout, stderr io.Writer) int {
 	w, err := parseWaitArgs(args)
 	if err != nil {
-		fmt.Fprintf(stderr, "orca: %v\n\n%s", err, usage)
+		fmt.Fprintf(stderr, "askother: %v\n\n%s", err, usage)
 		return exitRefused
 	}
 	d, err := stateDeps(os.Environ(), userHome())
@@ -98,7 +98,7 @@ func waitRuns(ctx context.Context, d lifecycle.Deps, w waitArgs, stdout, stderr 
 		res, err := lifecycle.Wait(ctx, d, w.ids, w.any, budget)
 		switch {
 		case err != nil:
-			fmt.Fprintf(stderr, "orca: %v\n", err)
+			fmt.Fprintf(stderr, "askother: %v\n", err)
 			if errors.Is(err, run.CodeNotFound) || errors.Is(err, run.CodeInvalidInput) {
 				return exitRefused
 			}
@@ -107,7 +107,7 @@ func waitRuns(ctx context.Context, d lifecycle.Deps, w waitArgs, stdout, stderr 
 			printStatus(stdout, res.Runs)
 			return outcomeCode(res.Runs)
 		case ctx.Err() != nil:
-			fmt.Fprintln(stderr, "orca: wait interrupted; the runs continue")
+			fmt.Fprintln(stderr, "askother: wait interrupted; the runs continue")
 			return exitInterrupted
 		case !deadline.IsZero() && !time.Now().Before(deadline):
 			printStatus(stdout, res.Runs)

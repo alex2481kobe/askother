@@ -8,8 +8,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/alex2481kobe/orca/internal/lifecycle"
-	"github.com/alex2481kobe/orca/internal/run"
+	"github.com/alex2481kobe/askother/internal/lifecycle"
+	"github.com/alex2481kobe/askother/internal/run"
 )
 
 func testUI(t *testing.T) (*http.Client, string, string, *run.Store) {
@@ -45,7 +45,7 @@ func TestLocalUIRequiresTokenAndLocalOrigin(t *testing.T) {
 			req.Header.Set("Origin", origin)
 		}
 		if key != "" {
-			req.Header.Set("X-Orca-Token", key)
+			req.Header.Set("X-AskOther-Token", key)
 		}
 		resp, err := client.Do(req)
 		if err != nil {
@@ -93,7 +93,7 @@ func TestClearHidesRunWithoutReadingOrDeletingIt(t *testing.T) {
 	}
 	u, _ := url.Parse(address)
 	req, _ := http.NewRequest(http.MethodPost, u.Scheme+"://"+u.Host+"/api/clear", bytes.NewBufferString(`{"id":"`+id+`"}`))
-	req.Header.Set("X-Orca-Token", token)
+	req.Header.Set("X-AskOther-Token", token)
 	req.Header.Set("Content-Type", "application/json")
 	resp, err := client.Do(req)
 	if err != nil {

@@ -12,11 +12,11 @@ import (
 )
 
 // TestRunLockHelperProcess is not a test: it is the child process started by
-// lockHelper. ORCA_LOCK_HELPER selects what it does with the lock on fd 3:
+// lockHelper. ASKOTHER_LOCK_HELPER selects what it does with the lock on fd 3:
 //   - hold: keep the inherited lock (like a supervisor) until killed
 //   - observe: loop taking and dropping a shared lock (like a status reader)
 func TestRunLockHelperProcess(t *testing.T) {
-	mode := os.Getenv("ORCA_LOCK_HELPER")
+	mode := os.Getenv("ASKOTHER_LOCK_HELPER")
 	if mode == "" {
 		return
 	}
@@ -36,7 +36,7 @@ func TestRunLockHelperProcess(t *testing.T) {
 func lockHelper(t *testing.T, mode string, lock *os.File) *exec.Cmd {
 	t.Helper()
 	cmd := exec.Command(os.Args[0], "-test.run=^TestRunLockHelperProcess$")
-	cmd.Env = append(os.Environ(), "ORCA_LOCK_HELPER="+mode)
+	cmd.Env = append(os.Environ(), "ASKOTHER_LOCK_HELPER="+mode)
 	cmd.ExtraFiles = []*os.File{lock}
 	out, err := cmd.StdoutPipe()
 	if err != nil {

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/alex2481kobe/orca/internal/worker"
+	"github.com/alex2481kobe/askother/internal/worker"
 )
 
 // Tool is one entry of the tools/list result.

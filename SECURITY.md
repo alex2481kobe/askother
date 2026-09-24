@@ -5,7 +5,7 @@
 Please report security issues privately. Do not open a public issue.
 
 Use the **Report a vulnerability** button on the
-[Security tab](https://github.com/alex2481kobe/orca/security/advisories/new).
+[Security tab](https://github.com/alex2481kobe/askother/security/advisories/new).
 We will confirm we got the report, work with you on a fix, and agree on when to
 make it public.
 
@@ -21,33 +21,33 @@ Do not include API keys, tokens, private host names or unredacted logs.
 
 ## Supported versions
 
-Orca has no releases yet. You build it from source. Security fixes go to the
+AskOther has no releases yet. You build it from source. Security fixes go to the
 `main` branch, so please check the latest `main` before reporting.
 
-## What Orca protects, and what it does not
+## What AskOther protects, and what it does not
 
-Orca starts agent CLIs (Claude Code and Codex) and records their results. It is
+AskOther starts agent CLIs (Claude Code and Codex) and records their results. It is
 **not a security boundary** and adds no sandbox of its own.
 
 - **Modes are passed through.** The mode an agent picks goes straight to the
   worker CLI, and that CLI enforces it. If the CLI allows something in that
-  mode, Orca does not stop it. The default mode is the most careful one each
+  mode, AskOther does not stop it. The default mode is the most careful one each
   CLI offers.
 - **Worker environments use an allowlist.** A worker gets only a short list of
   environment variables (such as `PATH`, `HOME`, `USER`, `SHELL`, `LANG`,
-  `TMPDIR`, `TERM`, `LC_*` and `ORCA_HOME`). Everything else is dropped,
+  `TMPDIR`, `TERM`, `LC_*` and `ASKOTHER_HOME`). Everything else is dropped,
   including the calling agent's own session variables and tokens.
 - **Local state is private.** Run records and answers live in
-  `~/.local/state/orca` (or `ORCA_HOME`). The folder is created with mode
+  `~/.local/state/askother` (or `ASKOTHER_HOME`). The folder is created with mode
   `0700` and the files with mode `0600`, so only your user can read them.
-- **Nothing listens on the network.** Orca has no server and no open port.
+- **Nothing listens on the network.** AskOther has no server and no open port.
   Agents reach it over standard input and output.
-- **Anyone who can run programs as your user can use Orca.** It does not check
+- **Anyone who can run programs as your user can use AskOther.** It does not check
   who is calling it.
 
 ## Repository safety
 
 - Continuous integration uses read-only permissions and no secrets.
-- Outside pull requests are reviewed before any workflow runs on them.
+- Workflows on outside pull requests run only after a maintainer approves them.
 - Changes to `.github/`, `go.mod`, this policy, the license or the
   contribution guide need owner review.

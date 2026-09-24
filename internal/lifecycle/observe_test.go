@@ -11,7 +11,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/alex2481kobe/orca/internal/run"
+	"github.com/alex2481kobe/askother/internal/run"
 )
 
 // o-hold-lock stands in for a supervisor: it creates and holds runs/<id>.lock

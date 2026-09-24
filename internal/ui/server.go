@@ -1,4 +1,4 @@
-// Package ui serves Orca's local, short-lived run viewer.
+// Package ui serves AskOther's local, short-lived run viewer.
 package ui
 
 import (
@@ -13,9 +13,9 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/alex2481kobe/orca/assets"
-	"github.com/alex2481kobe/orca/internal/lifecycle"
-	"github.com/alex2481kobe/orca/internal/run"
+	"github.com/alex2481kobe/askother/assets"
+	"github.com/alex2481kobe/askother/internal/lifecycle"
+	"github.com/alex2481kobe/askother/internal/run"
 )
 
 //go:embed index.html ui.css ui.js
@@ -68,14 +68,14 @@ func (h *handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		h.serveFile(w, "ui.js", "text/javascript; charset=utf-8")
 	case "/favicon.ico":
 		h.serveAsset(w, "favicon-32.png")
-	case "/assets/orca.png":
-		h.serveAsset(w, "orca-mark.png")
+	case "/assets/askother.png":
+		h.serveAsset(w, "askother-mark.png")
 	case "/assets/openai.png":
 		h.serveAsset(w, "openai-mark.png")
 	case "/assets/claude.png":
 		h.serveAsset(w, "claude-mark.png")
 	case "/api/runs", "/api/stop", "/api/clear":
-		if !h.allowed(r.Header.Get("X-Orca-Token")) {
+		if !h.allowed(r.Header.Get("X-AskOther-Token")) {
 			http.Error(w, "forbidden", http.StatusForbidden)
 			return
 		}

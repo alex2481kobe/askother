@@ -9,8 +9,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/alex2481kobe/orca/internal/config"
-	"github.com/alex2481kobe/orca/internal/run"
+	"github.com/alex2481kobe/askother/internal/config"
+	"github.com/alex2481kobe/askother/internal/run"
 )
 
 // ReadyTimeout bounds the launcher's wait for the supervisor's readiness
@@ -110,7 +110,7 @@ func reserve(d Deps, c Caller, ad admission, r *run.Run) (*os.File, error) {
 	}
 	r.SchemaVersion, r.ID, r.Key, r.RequestSHA256 = run.SchemaVersion, id, ad.key, ad.hash
 	r.CallerID, r.CallerSource = c.ID, c.Source
-	if parent := d.Env["ORCA_RUN_ID"]; parent != "" {
+	if parent := d.Env["ASKOTHER_RUN_ID"]; parent != "" {
 		if _, err := d.Store.Read(parent); err == nil {
 			r.ParentID = &parent
 		}

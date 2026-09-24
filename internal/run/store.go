@@ -14,7 +14,7 @@ import (
 
 // Store is the run file tree under one root directory: index.lock, and in
 // runs/ each run's <id>.json record, <id>.txt answer and <id>.lock run lock.
-// Resolving the root (ORCA_HOME or the default) is the caller's job.
+// Resolving the root (ASKOTHER_HOME or the default) is the caller's job.
 type Store struct {
 	root, runs string
 	fault      func(op faultOp, path string) error // tests only: fail a publication or removal step

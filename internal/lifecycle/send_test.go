@@ -5,7 +5,7 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/alex2481kobe/orca/internal/run"
+	"github.com/alex2481kobe/askother/internal/run"
 )
 
 func TestSendContinuesSource(t *testing.T) {

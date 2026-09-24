@@ -9,7 +9,7 @@ import (
 )
 
 // A name no real install has, so the real fixed dirs never match.
-const fakeName = "orca-config-test-worker"
+const fakeName = "askother-config-test-worker"
 
 func fakeExe(t *testing.T, dir, name, script string) string {
 	t.Helper()

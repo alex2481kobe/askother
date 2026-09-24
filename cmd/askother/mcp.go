@@ -8,15 +8,15 @@ import (
 	"io"
 	"os"
 
-	"github.com/alex2481kobe/orca/internal/mcp"
-	"github.com/alex2481kobe/orca/internal/tools"
+	"github.com/alex2481kobe/askother/internal/mcp"
+	"github.com/alex2481kobe/askother/internal/tools"
 )
 
-// cmdMCP is `orca mcp`: the stdio MCP server a harness starts. It exits 0
+// cmdMCP is `askother mcp`: the stdio MCP server a harness starts. It exits 0
 // on stdin EOF, SIGINT or SIGTERM; supervisors and runs are unaffected.
 func cmdMCP(args []string, stderr io.Writer) int {
 	if len(args) != 0 {
-		fmt.Fprintf(stderr, "orca: mcp takes no arguments\n\n%s", usage)
+		fmt.Fprintf(stderr, "askother: mcp takes no arguments\n\n%s", usage)
 		return exitRefused
 	}
 	d, err := mcpDeps(os.Environ(), userHome())
@@ -37,7 +37,7 @@ func cmdMCP(args []string, stderr io.Writer) int {
 		Version: version(), Tools: h.Tools, Handler: h,
 	})
 	if err := srv.Serve(ctx); err != nil {
-		fmt.Fprintf(stderr, "orca mcp: %v\n", err)
+		fmt.Fprintf(stderr, "askother mcp: %v\n", err)
 		return exitInternal
 	}
 	return 0
@@ -48,5 +48,5 @@ func cmdMCP(args []string, stderr io.Writer) int {
 func instanceID() string {
 	b := make([]byte, 8)
 	_, _ = rand.Read(b) // crypto/rand.Read never fails on supported platforms
-	return "orca-mcp-" + hex.EncodeToString(b)
+	return "askother-mcp-" + hex.EncodeToString(b)
 }

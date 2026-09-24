@@ -44,7 +44,7 @@ type Final struct {
 }
 
 // Facts describe a worker: its name, default and accepted modes, and the
-// settings Orca always passes, each with its reason inside the string.
+// settings AskOther always passes, each with its reason inside the string.
 type Facts struct {
 	Name, DefaultMode string
 	Modes             []string

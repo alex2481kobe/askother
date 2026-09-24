@@ -1,6 +1,6 @@
 # Contributing
 
-Thanks for helping. Orca is meant to stay small, so the best changes are short,
+Thanks for helping. AskOther is meant to stay small, so the best changes are short,
 well tested and fix a real problem.
 
 ## Build and test
@@ -30,8 +30,8 @@ Run all three before you open a pull request. `gofmt -l .` should print nothing.
   broke and how the test caught it.
 - **Never let tests reach the real CLIs.** Tests use a fake worker program that
   imitates `claude` and `codex`. Every test process gets a minimal environment:
-  `PATH=/usr/bin:/bin`, a temporary `HOME`, and temporary `ORCA_HOME` and
-  `ORCA_CONFIG`. Worker binaries come only from that temporary config. If a
+  `PATH=/usr/bin:/bin`, a temporary `HOME`, and temporary `ASKOTHER_HOME` and
+  `ASKOTHER_CONFIG`. Worker binaries come only from that temporary config. If a
   test inherited your real `PATH`, one mistake could start a real agent,
   spend real model tokens, and touch real files.
 - **Tests that call the real CLIs are opt-in.** They sit behind the `realcli`
@@ -40,15 +40,14 @@ Run all three before you open a pull request. `gofmt -l .` should print nothing.
 - **Test data is made up.** Use synthetic paths such as `/synthetic/user`.
   Never copy real session logs, run records or home paths into the repo.
 - **Clean up.** A test must not leave processes running. After a test run,
-  no `orca supervise` or fake worker process should remain.
+  no `askother supervise` or fake worker process should remain.
 
 ## Pull requests
 
 - Explain what changed and which checks you ran.
 - Keep unrelated changes out of the pull request.
-- First-time and outside contributors may wait for a maintainer to approve
-  workflow runs. Outside pull requests are reviewed before any workflow runs
-  on them.
+- Workflows on pull requests from outside contributors run only after a
+  maintainer approves them. They run with a read-only token and no secrets.
 - Changes to `.github/`, `go.mod`, `SECURITY.md`, this file, `LICENSE`,
   `AGENTS.md` or `CLAUDE.md` need owner review. Maintainers may ask for smaller
   pull requests when these change.

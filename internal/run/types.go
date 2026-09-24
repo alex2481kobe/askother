@@ -10,7 +10,7 @@ package run
 import (
 	"time"
 
-	"github.com/alex2481kobe/orca/internal/worker"
+	"github.com/alex2481kobe/askother/internal/worker"
 )
 
 // SchemaVersion is the only record version this build reads or writes.
@@ -29,7 +29,7 @@ const (
 	StateInterrupted State = "interrupted"
 )
 
-// Execution is what Orca knows about the worker process itself.
+// Execution is what AskOther knows about the worker process itself.
 type Execution string
 
 const (
@@ -96,7 +96,7 @@ type Run struct {
 	UIHiddenAt      *time.Time  `json:"ui_hidden_at,omitempty"`
 }
 
-// Request is the normalized request. Mode is the mode Orca passed, so it is
+// Request is the normalized request. Mode is the mode AskOther passed, so it is
 // always set; the other optional strings are empty when absent.
 type Request struct {
 	Worker    string `json:"worker"`

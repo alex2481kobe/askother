@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-// Orca's Codex argv, initial and resume, with every optional part.
+// AskOther's Codex argv, initial and resume, with every optional part.
 func TestParseCodex(t *testing.T) {
 	args := []string{"exec", "--json", "-o", "/tmp/ans.tmp", "--sandbox", "workspace-write",
 		"-c", `approval_policy="never"`, "--skip-git-repo-check", "-m", "fake-model",
@@ -44,7 +44,7 @@ func TestParseCodexSandboxPlacement(t *testing.T) {
 	}
 }
 
-// Orca's Claude argv, initial and resume. Flags Orca no longer passes are
+// AskOther's Claude argv, initial and resume. Flags AskOther no longer passes are
 // rejected, so an adapter that still sends them fails loudly.
 func TestParseClaude(t *testing.T) {
 	in, err := parseClaude(claudeArgv("--model", "fake-model", "--effort", "low"))

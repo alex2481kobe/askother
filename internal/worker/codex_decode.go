@@ -22,7 +22,7 @@ type codexDecoder struct {
 	protocol  string // first protocol failure
 }
 
-// Consume decodes one event. It decodes the type first, so an event Orca
+// Consume decodes one event. It decodes the type first, so an event AskOther
 // does not read can never fail on its other fields.
 func (d *codexDecoder) Consume(line []byte) (Update, error) {
 	if len(bytes.TrimSpace(line)) == 0 {

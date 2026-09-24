@@ -10,7 +10,7 @@ const notice = document.getElementById("notice");
 const empty = document.getElementById("empty");
 
 const state = { runs: [], session: "", selected: "", autoSelect: true, scale: 1, x: 0, y: 0, width: 0, height: 0, drag: null };
-const icons = { codex: "/assets/openai.png", claude: "/assets/claude.png", fallback: "/assets/orca.png" };
+const icons = { codex: "/assets/openai.png", claude: "/assets/claude.png", fallback: "/assets/askother.png" };
 
 function el(tag, className = "", text = "") {
   const item = document.createElement(tag);
@@ -59,7 +59,7 @@ function showNotice(message, persistent = false) {
 }
 
 async function api(path, body) {
-  const options = { headers: { "X-Orca-Token": token } };
+  const options = { headers: { "X-AskOther-Token": token } };
   if (body) {
     options.method = "POST";
     options.headers["Content-Type"] = "application/json";
@@ -77,7 +77,7 @@ async function refresh() {
     if (notice.dataset.persistent === "true") notice.hidden = true;
     render();
   } catch (error) {
-    showNotice(error instanceof TypeError ? "View disconnected. Run orca ui again." : "Could not load runs.", true);
+    showNotice(error instanceof TypeError ? "View disconnected. Run askother ui again." : "Could not load runs.", true);
   }
 }
 
@@ -410,10 +410,10 @@ function setTheme(theme) {
   document.documentElement.dataset.theme = theme;
   toggle.setAttribute("aria-pressed", theme === "dark" ? "true" : "false");
   toggle.setAttribute("aria-label", `Switch to ${theme === "dark" ? "light" : "dark"} mode`);
-  localStorage.setItem("orca-theme", theme);
+  localStorage.setItem("askother-theme", theme);
 }
 toggle.addEventListener("click", () => setTheme(document.documentElement.dataset.theme === "dark" ? "light" : "dark"));
-setTheme(localStorage.getItem("orca-theme") || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"));
+setTheme(localStorage.getItem("askother-theme") || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"));
 window.addEventListener("resize", () => { if (state.width) fit(); });
 refresh();
 setInterval(() => { if (!state.drag && document.visibilityState === "visible") refresh(); }, 2000);

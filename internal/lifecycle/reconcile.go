@@ -1,7 +1,7 @@
 package lifecycle
 
 import (
-	"github.com/alex2481kobe/orca/internal/run"
+	"github.com/alex2481kobe/askother/internal/run"
 )
 
 // derive returns what r means given whether its run lock is held. A record

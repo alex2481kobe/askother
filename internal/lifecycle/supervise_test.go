@@ -13,15 +13,15 @@ import (
 	"testing"
 	"time"
 
-	"github.com/alex2481kobe/orca/internal/run"
-	"github.com/alex2481kobe/orca/internal/testutil"
-	"github.com/alex2481kobe/orca/internal/worker"
+	"github.com/alex2481kobe/askother/internal/run"
+	"github.com/alex2481kobe/askother/internal/testutil"
+	"github.com/alex2481kobe/askother/internal/worker"
 )
 
 // svEnv is one in-process supervision setup: a temp store, the real
 // adapters, and fake worker binaries reached through wrapper scripts. The
 // wrapper is needed because the worker env is an allowlist, so the fake's
-// ORCA_FAKE_* selection cannot come from d.Env.
+// ASKOTHER_FAKE_* selection cannot come from d.Env.
 type svEnv struct {
 	t             *testing.T
 	d             Deps
@@ -45,12 +45,12 @@ func newSVEnv(t *testing.T) *svEnv {
 	return &svEnv{t: t, dir: dir, cwd: cwd, codex: codex, claude: claude, d: Deps{
 		Store:     st,
 		Adapters:  map[string]worker.Adapter{"codex": worker.Codex{}, "claude": worker.Claude{}},
-		Self:      filepath.Join(dir, "bin", "orca"),
+		Self:      filepath.Join(dir, "bin", "askother"),
 		StateHome: home,
 		Env: map[string]string{
 			"PATH": os.Getenv("PATH"), "HOME": dir, "LANG": "C.UTF-8",
 			"CLAUDE_CODE_SESSION_ID": "caller-session", "CLAUDECODE": "1",
-			"CODEX_HOME": filepath.Join(dir, "codex-home"), "ORCA_RUN_ID": "caller-run",
+			"CODEX_HOME": filepath.Join(dir, "codex-home"), "ASKOTHER_RUN_ID": "caller-run",
 		},
 	}}
 }
@@ -77,8 +77,8 @@ func (e *svEnv) fake(dialect, scenario, arg string) (bin, record string) {
 	}
 	record = filepath.Join(dir, "fake-record.json")
 	q := func(s string) string { return "'" + strings.ReplaceAll(s, "'", `'\''`) + "'" }
-	script := fmt.Sprintf("#!/bin/sh\nORCA_FAKE_SCENARIO=%s ORCA_FAKE_ARG=%s ORCA_FAKE_RECORD=%s\n"+
-		"export ORCA_FAKE_SCENARIO ORCA_FAKE_ARG ORCA_FAKE_RECORD\nexec %s \"$@\"\n",
+	script := fmt.Sprintf("#!/bin/sh\nASKOTHER_FAKE_SCENARIO=%s ASKOTHER_FAKE_ARG=%s ASKOTHER_FAKE_RECORD=%s\n"+
+		"export ASKOTHER_FAKE_SCENARIO ASKOTHER_FAKE_ARG ASKOTHER_FAKE_RECORD\nexec %s \"$@\"\n",
 		q(scenario), q(arg), q(record), q(fakeBin))
 	bin = filepath.Join(dir, dialect)
 	if err := os.WriteFile(bin, []byte(script), 0o700); err != nil {

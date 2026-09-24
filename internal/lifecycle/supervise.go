@@ -7,9 +7,9 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/alex2481kobe/orca/internal/config"
-	"github.com/alex2481kobe/orca/internal/run"
-	"github.com/alex2481kobe/orca/internal/worker"
+	"github.com/alex2481kobe/askother/internal/config"
+	"github.com/alex2481kobe/askother/internal/run"
+	"github.com/alex2481kobe/askother/internal/worker"
 )
 
 // StopPoll is how often the supervisor re-reads its record for a stop
@@ -44,8 +44,8 @@ type svRun struct {
 	signaled  bool // Stop delivered TERM: the only way a run ends stopped
 }
 
-// Supervise is the body of `orca supervise <id>`. lock and
-// ready are fds 3 and 4 in production (os.NewFile in cmd/orca), passed
+// Supervise is the body of `askother supervise <id>`. lock and
+// ready are fds 3 and 4 in production (os.NewFile in cmd/askother), passed
 // directly in tests. The run lock is released only when Supervise returns,
 // after the terminal record is written or its retries are exhausted. It
 // returns 0 when supervision was clean, whatever the run's outcome, and 1
@@ -87,7 +87,7 @@ func Supervise(d Deps, id string, lock, ready *os.File) int {
 	})) {
 		return 1
 	}
-	workerEnv := append(config.WorkerEnv(d.Env), "ORCA_RUN_ID="+id)
+	workerEnv := append(config.WorkerEnv(d.Env), "ASKOTHER_RUN_ID="+id)
 	w, err := run.StartWorker(cmd, r.Request.CWD, workerEnv)
 	if err != nil {
 		return s.failNotStarted(&worker.Failure{Code: string(run.CodeWorkerFailed), Message: "start worker: " + err.Error()})

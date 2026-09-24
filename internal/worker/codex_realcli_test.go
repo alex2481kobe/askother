@@ -15,7 +15,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/alex2481kobe/orca/internal/testutil"
+	"github.com/alex2481kobe/askother/internal/testutil"
 )
 
 // Four tiny `codex exec` calls against the user's own Codex config; two of

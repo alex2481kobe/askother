@@ -6,15 +6,15 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/alex2481kobe/orca/internal/config"
-	"github.com/alex2481kobe/orca/internal/lifecycle"
-	"github.com/alex2481kobe/orca/internal/run"
-	"github.com/alex2481kobe/orca/internal/testutil"
-	"github.com/alex2481kobe/orca/internal/worker"
+	"github.com/alex2481kobe/askother/internal/config"
+	"github.com/alex2481kobe/askother/internal/lifecycle"
+	"github.com/alex2481kobe/askother/internal/run"
+	"github.com/alex2481kobe/askother/internal/testutil"
+	"github.com/alex2481kobe/askother/internal/worker"
 )
 
 // tSupervisor is the helper mode: the test binary, symlinked under this name
-// as Deps.Self, acts as `orca supervise <id>`. The name also makes leftover
+// as Deps.Self, acts as `askother supervise <id>`. The name also makes leftover
 // helpers findable with `pgrep -f t-supervisor`.
 const tSupervisor = "t-supervisor"
 
@@ -30,7 +30,7 @@ func TestMain(m *testing.M) {
 	os.Exit(code)
 }
 
-// tSupervise runs lifecycle.Supervise on inherited fds 3 and 4, as cmd/orca
+// tSupervise runs lifecycle.Supervise on inherited fds 3 and 4, as cmd/askother
 // will. The store is <dir>/state, where Self is <dir>/bin/t-supervisor.
 func tSupervise(args []string) int {
 	if len(args) != 2 || args[0] != "supervise" {

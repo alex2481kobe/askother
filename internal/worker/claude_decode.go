@@ -35,7 +35,7 @@ func (d *claudeDecoder) Consume(line []byte) (Update, error) {
 	return u, f
 }
 
-// consume decodes the type first, so an event Orca does not read can never
+// consume decodes the type first, so an event AskOther does not read can never
 // fail on its other fields.
 func (d *claudeDecoder) consume(line []byte) (Update, *Failure) {
 	line = bytes.TrimSpace(line)

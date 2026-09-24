@@ -10,10 +10,10 @@ func TestStateHome(t *testing.T) {
 		want string
 		err  bool
 	}{
-		{"default", nil, "/synthetic/user/.local/state/orca", false},
-		{"override", map[string]string{"ORCA_HOME": "/tmp/orca-x/"}, "/tmp/orca-x", false},
-		{"empty override ignored", map[string]string{"ORCA_HOME": ""}, "/synthetic/user/.local/state/orca", false},
-		{"relative override", map[string]string{"ORCA_HOME": "state"}, "", true},
+		{"default", nil, "/synthetic/user/.local/state/askother", false},
+		{"override", map[string]string{"ASKOTHER_HOME": "/tmp/askother-x/"}, "/tmp/askother-x", false},
+		{"empty override ignored", map[string]string{"ASKOTHER_HOME": ""}, "/synthetic/user/.local/state/askother", false},
+		{"relative override", map[string]string{"ASKOTHER_HOME": "state"}, "", true},
 	}
 	for _, c := range cases {
 		got, err := StateHome(c.env, home)
@@ -28,15 +28,15 @@ func TestStateHome(t *testing.T) {
 
 func TestConfigFile(t *testing.T) {
 	got, err := ConfigFile(nil, "/synthetic/user")
-	if err != nil || got != "/synthetic/user/.config/orca/config.json" {
+	if err != nil || got != "/synthetic/user/.config/askother/config.json" {
 		t.Errorf("default: got %q, %v", got, err)
 	}
-	got, err = ConfigFile(map[string]string{"ORCA_CONFIG": "/tmp/c.json"}, "")
+	got, err = ConfigFile(map[string]string{"ASKOTHER_CONFIG": "/tmp/c.json"}, "")
 	if err != nil || got != "/tmp/c.json" {
 		t.Errorf("override: got %q, %v", got, err)
 	}
-	if _, err := ConfigFile(map[string]string{"ORCA_CONFIG": "c.json"}, "/h"); err == nil {
-		t.Error("relative ORCA_CONFIG: want error")
+	if _, err := ConfigFile(map[string]string{"ASKOTHER_CONFIG": "c.json"}, "/h"); err == nil {
+		t.Error("relative ASKOTHER_CONFIG: want error")
 	}
 	if _, err := ConfigFile(nil, "rel"); err == nil {
 		t.Error("relative home: want error")

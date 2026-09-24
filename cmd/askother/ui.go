@@ -11,12 +11,12 @@ import (
 	"os/signal"
 	"runtime"
 
-	"github.com/alex2481kobe/orca/internal/ui"
+	"github.com/alex2481kobe/askother/internal/ui"
 )
 
 func cmdUI(args []string, stdout, stderr io.Writer) int {
 	if len(args) != 0 {
-		fmt.Fprintln(stderr, "orca: ui takes no arguments")
+		fmt.Fprintln(stderr, "askother: ui takes no arguments")
 		return exitRefused
 	}
 	d, err := stateDeps(os.Environ(), userHome())
@@ -25,7 +25,7 @@ func cmdUI(args []string, stdout, stderr io.Writer) int {
 	}
 	ln, server, url, err := ui.Listen(d)
 	if err != nil {
-		fmt.Fprintf(stderr, "orca ui: %v\n", err)
+		fmt.Fprintf(stderr, "askother ui: %v\n", err)
 		return exitInternal
 	}
 	defer ln.Close()
@@ -38,7 +38,7 @@ func cmdUI(args []string, stdout, stderr io.Writer) int {
 		_ = server.Shutdown(context.Background())
 	}()
 	if err := server.Serve(ln); err != nil && !errors.Is(err, http.ErrServerClosed) {
-		fmt.Fprintf(stderr, "orca ui: %v\n", err)
+		fmt.Fprintf(stderr, "askother ui: %v\n", err)
 		return exitInternal
 	}
 	return 0
@@ -51,7 +51,7 @@ func openUI(url string, stderr io.Writer) {
 	}
 	cmd := exec.Command(command, url)
 	if err := cmd.Start(); err != nil {
-		fmt.Fprintf(stderr, "orca ui: open the URL above in your browser (%v)\n", err)
+		fmt.Fprintf(stderr, "askother ui: open the URL above in your browser (%v)\n", err)
 		return
 	}
 	go func() { _ = cmd.Wait() }()

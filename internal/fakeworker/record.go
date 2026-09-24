@@ -13,8 +13,8 @@ import (
 	"unicode/utf8"
 )
 
-// record is what the fake saw and did, written to $ORCA_FAKE_RECORD so tests
-// can assert what Orca passed. Only environment names are recorded, never values.
+// record is what the fake saw and did, written to $ASKOTHER_FAKE_RECORD so tests
+// can assert what AskOther passed. Only environment names are recorded, never values.
 type record struct {
 	path          string
 	Dialect       string      `json:"dialect"`

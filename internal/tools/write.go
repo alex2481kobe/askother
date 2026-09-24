@@ -3,9 +3,9 @@ package tools
 import (
 	"encoding/json"
 
-	"github.com/alex2481kobe/orca/internal/lifecycle"
-	"github.com/alex2481kobe/orca/internal/mcp"
-	"github.com/alex2481kobe/orca/internal/run"
+	"github.com/alex2481kobe/askother/internal/lifecycle"
+	"github.com/alex2481kobe/askother/internal/mcp"
+	"github.com/alex2481kobe/askother/internal/run"
 )
 
 // The write tools: run, send, stop.
@@ -39,7 +39,7 @@ func (h *Handler) send(c lifecycle.Caller, args json.RawMessage) (any, error) {
 
 // runOutput's watch is exactly a shell command a caller can run as given.
 func runOutput(r *run.Run, reused bool) mcp.RunOutput {
-	return mcp.RunOutput{ID: r.ID, State: r.State, Reused: reused, Watch: "orca wait " + r.ID}
+	return mcp.RunOutput{ID: r.ID, State: r.State, Reused: reused, Watch: "askother wait " + r.ID}
 }
 
 func (h *Handler) stop(args json.RawMessage) (any, error) {

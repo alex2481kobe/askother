@@ -8,8 +8,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/alex2481kobe/orca/internal/mcp"
-	"github.com/alex2481kobe/orca/internal/run"
+	"github.com/alex2481kobe/askother/internal/mcp"
+	"github.com/alex2481kobe/askother/internal/run"
 )
 
 // startRun runs a codex worker with the given scenario and returns its id
@@ -39,7 +39,7 @@ func TestSendResumes(t *testing.T) {
 	e := newEnv(t)
 	c := e.startMCP("claude-code", "CLAUDE_CODE_SESSION_ID=00000000-0000-4000-8000-00000000e2e2")
 	first, _ := startRun(c, e, "k1", "ok", "")
-	if code, out, _ := e.orca("wait", first); code != 0 {
+	if code, out, _ := e.askother("wait", first); code != 0 {
 		t.Fatalf("first run: exit %d %q", code, out)
 	}
 	thread := e.record(first).NativeSessionID
@@ -49,7 +49,7 @@ func TestSendResumes(t *testing.T) {
 
 	var out mcp.RunOutput
 	c.mustTool("send", map[string]any{"key": "k2", "id": first, "message": "and then?"}, nil, &out)
-	if code, stdout, _ := e.orca("wait", out.ID); code != 0 {
+	if code, stdout, _ := e.askother("wait", out.ID); code != 0 {
 		t.Fatalf("send run: exit %d %q", code, stdout)
 	}
 	r := e.record(out.ID)
@@ -63,7 +63,7 @@ func TestSendResumes(t *testing.T) {
 	c.close()
 }
 
-// stop on a hung worker ends it stopped; orca wait exits 2.
+// stop on a hung worker ends it stopped; askother wait exits 2.
 func TestStopHang(t *testing.T) {
 	e := newEnv(t)
 	c := e.startMCP("claude-code", "CLAUDE_CODE_SESSION_ID=00000000-0000-4000-8000-00000000e2e3")
@@ -74,14 +74,14 @@ func TestStopHang(t *testing.T) {
 	if !stop.StopRequested {
 		t.Fatalf("stop: %+v", stop)
 	}
-	code, out, _ := e.orca("wait", id)
-	if code != 2 || !strings.HasPrefix(out, "orca: run "+id+" stopped ") {
-		t.Fatalf("orca wait: exit %d %q", code, out)
+	code, out, _ := e.askother("wait", id)
+	if code != 2 || !strings.HasPrefix(out, "askother: run "+id+" stopped ") {
+		t.Fatalf("askother wait: exit %d %q", code, out)
 	}
 	c.close()
 }
 
-// Supervisors are detached, so killing orca mcp loses nothing; a fresh
+// Supervisors are detached, so killing askother mcp loses nothing; a fresh
 // server sees the run done.
 func TestMCPKilledMidRun(t *testing.T) {
 	e := newEnv(t)
@@ -89,8 +89,8 @@ func TestMCPKilledMidRun(t *testing.T) {
 	id, _ := startRun(c, e, "k1", "silent", "1500ms")
 	running(e, id)
 	c.kill()
-	if code, out, _ := e.orca("wait", id); code != 0 {
-		t.Fatalf("orca wait after the server died: exit %d %q", code, out)
+	if code, out, _ := e.askother("wait", id); code != 0 {
+		t.Fatalf("askother wait after the server died: exit %d %q", code, out)
 	}
 	c2 := e.startMCP("claude-code", "CLAUDE_CODE_SESSION_ID=00000000-0000-4000-8000-00000000e2e4")
 	var st mcp.StatusOutput
@@ -106,21 +106,21 @@ func TestMCPKilledMidRun(t *testing.T) {
 	c2.close()
 }
 
-// Supervisor loss reads as interrupted, never success; orca wait exits 3.
+// Supervisor loss reads as interrupted, never success; askother wait exits 3.
 // The interrupted view is derived on read and never written.
 func TestSupervisorKilled(t *testing.T) {
 	e := newEnv(t)
 	c := e.startMCP("claude-code", "CLAUDE_CODE_SESSION_ID=00000000-0000-4000-8000-00000000e2e5")
 	id, _ := startRun(c, e, "k1", "hang", "")
 	r := running(e, id)
-	// The hung worker outlives its supervisor: Orca never signals from
+	// The hung worker outlives its supervisor: AskOther never signals from
 	// stored pids, so the test kills it after.
 	defer syscall.Kill(-*r.Runtime.WorkerPGID, syscall.SIGKILL)
 	must(t, syscall.Kill(*r.Runtime.SupervisorPID, syscall.SIGKILL))
 
-	code, out, _ := e.orca("wait", id)
-	if code != 3 || !strings.HasPrefix(out, "orca: run "+id+" interrupted (execution ") {
-		t.Fatalf("orca wait: exit %d %q", code, out)
+	code, out, _ := e.askother("wait", id)
+	if code != 3 || !strings.HasPrefix(out, "askother: run "+id+" interrupted (execution ") {
+		t.Fatalf("askother wait: exit %d %q", code, out)
 	}
 	var st mcp.StatusOutput
 	c.mustTool("status", map[string]any{"id": id}, nil, &st)

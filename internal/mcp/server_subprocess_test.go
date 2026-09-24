@@ -15,7 +15,7 @@ import (
 
 // TestHelperProcess is the stdio server run by TestSubprocessSignalShutdown.
 func TestHelperProcess(t *testing.T) {
-	if os.Getenv("ORCA_MCP_TEST_HELPER") != "1" {
+	if os.Getenv("ASKOTHER_MCP_TEST_HELPER") != "1" {
 		return
 	}
 	ctx, stop := SignalContext(context.Background())
@@ -31,7 +31,7 @@ func TestSubprocessSignalShutdown(t *testing.T) {
 	for _, sig := range []syscall.Signal{syscall.SIGTERM, syscall.SIGINT} {
 		t.Run(sig.String(), func(t *testing.T) {
 			cmd := exec.Command(os.Args[0], "-test.run=^TestHelperProcess$")
-			cmd.Env = append(os.Environ(), "ORCA_MCP_TEST_HELPER=1")
+			cmd.Env = append(os.Environ(), "ASKOTHER_MCP_TEST_HELPER=1")
 			stdin, _ := cmd.StdinPipe()
 			stdout, _ := cmd.StdoutPipe()
 			if err := cmd.Start(); err != nil {
@@ -81,7 +81,7 @@ func TestSubprocessSignalShutdown(t *testing.T) {
 // A client that closes our stdout must not kill the server with SIGPIPE.
 func TestSubprocessSurvivesClosedStdout(t *testing.T) {
 	cmd := exec.Command(os.Args[0], "-test.run=^TestHelperProcess$")
-	cmd.Env = append(os.Environ(), "ORCA_MCP_TEST_HELPER=1")
+	cmd.Env = append(os.Environ(), "ASKOTHER_MCP_TEST_HELPER=1")
 	stdin, _ := cmd.StdinPipe()
 	stdout, _ := cmd.StdoutPipe()
 	if err := cmd.Start(); err != nil {

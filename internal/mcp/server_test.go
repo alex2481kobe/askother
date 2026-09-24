@@ -15,7 +15,7 @@ func TestInitializeVersions(t *testing.T) {
 		if m["protocolVersion"] != want {
 			t.Errorf("asked %q: got %v, want %s", asked, m["protocolVersion"], want)
 		}
-		if info := fmt.Sprint(m["serverInfo"]); info != "map[name:orca version:0.0.0-test]" {
+		if info := fmt.Sprint(m["serverInfo"]); info != "map[name:askother version:0.0.0-test]" {
 			t.Errorf("serverInfo %s", info)
 		}
 		if caps := fmt.Sprint(m["capabilities"]); caps != "map[tools:map[]]" {

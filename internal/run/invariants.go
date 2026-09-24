@@ -83,7 +83,7 @@ func (r *Run) Validate() error {
 // absent and "" hash the same. Not normalized: string contents are hashed
 // byte for byte (no trimming, case folding or path cleaning), and an explicit
 // timeout_ms of 0 differs from an absent one. Callers hash after defaults are
-// applied, so mode is the mode Orca will pass. Strings must be valid UTF-8;
+// applied, so mode is the mode AskOther will pass. Strings must be valid UTF-8;
 // otherwise the JSON encoder would replace bytes and distinct requests could
 // collide, so RequestHash returns INVALID_INPUT instead.
 func RequestHash(req Request) (string, error) {
@@ -102,7 +102,7 @@ func RequestHash(req Request) (string, error) {
 	return hex.EncodeToString(sum[:]), nil
 }
 
-// ExitCode maps the outcomes of the selected runs to an `orca wait` exit
+// ExitCode maps the outcomes of the selected runs to an `askother wait` exit
 // code with precedence 3 > 1 > 2 > 0. states[i] and execs[i] describe run i.
 //   - 3: any interrupted run, or any terminal run whose execution is unknown
 //   - 1: any failed; 2: any stopped; 0: every run done

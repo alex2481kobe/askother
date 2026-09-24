@@ -1,11 +1,11 @@
 # AGENTS
 
 Guide for coding agents and people changing this repo. Read `README.md` first
-for what Orca does. `CONTRIBUTING.md` has the full test rules.
+for what AskOther does. `CONTRIBUTING.md` has the full test rules.
 
 ## Layout
 
-- `cmd/orca/`: the `orca` command: `mcp`, `wait`, `help`, `version`, and the
+- `cmd/askother/`: the `askother` command: `mcp`, `wait`, `help`, `version`, and the
   hidden `supervise` step that watches one run.
 - `internal/run/`: run records on disk, locks, atomic writes, and worker
   process groups.
@@ -37,8 +37,8 @@ go test -race -count=1 ./...
 - One owner per concept. No compatibility shims or dead code.
 - A test counts only after you have seen it fail against broken code.
 - Tests never reach the real `claude` or `codex`. Give every test process a
-  minimal environment (`PATH=/usr/bin:/bin`, temporary `HOME`, `ORCA_HOME`
-  and `ORCA_CONFIG`).
+  minimal environment (`PATH=/usr/bin:/bin`, temporary `HOME`, `ASKOTHER_HOME`
+  and `ASKOTHER_CONFIG`).
 - Tests leave no processes running.
 - This repo is public. Never commit absolute machine paths, user names, host
   names, tokens, keys, logs, run records or internal planning notes.

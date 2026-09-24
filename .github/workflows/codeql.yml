@@ -1,10 +1,7 @@
 name: codeql
-# Reviewed exception to the manual only workflow policy in SECURITY.md. CodeQL
-# is a static analyzer on the safe pull_request trigger (not
+# CodeQL is a static analyzer on the safe pull_request trigger (not
 # pull_request_target), so fork pull requests run with a read-only token and no
-# secrets, and cannot use security-events: write. Automatic and scheduled scans
-# are the point of code scanning, so these triggers are intended here, and only
-# here.
+# secrets, and cannot use security-events: write.
 on:
   push:
     branches: [main]

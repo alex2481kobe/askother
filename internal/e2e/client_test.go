@@ -12,7 +12,7 @@ import (
 	"time"
 )
 
-// mcpClient drives one `orca mcp` process over real pipes, one request at
+// mcpClient drives one `askother mcp` process over real pipes, one request at
 // a time.
 type mcpClient struct {
 	t      *testing.T
@@ -41,11 +41,11 @@ func (l *lockedBuffer) String() string {
 	return l.b.String()
 }
 
-// startMCP starts `orca mcp` with extra env entries and initializes it as
+// startMCP starts `askother mcp` with extra env entries and initializes it as
 // the named client.
 func (e *env) startMCP(clientName string, extraEnv ...string) *mcpClient {
 	e.t.Helper()
-	cmd := exec.Command(orcaBin, "mcp")
+	cmd := exec.Command(askotherBin, "mcp")
 	cmd.Env = append(append([]string{}, e.base...), extraEnv...)
 	c := &mcpClient{t: e.t, cmd: cmd, lines: make(chan []byte, 16), stderr: &lockedBuffer{}, exited: make(chan struct{})}
 	cmd.Stderr = c.stderr
@@ -74,7 +74,7 @@ func (e *env) startMCP(clientName string, extraEnv ...string) *mcpClient {
 	var init struct {
 		ServerInfo struct{ Name string } `json:"serverInfo"`
 	}
-	if json.Unmarshal(res, &init) != nil || init.ServerInfo.Name != "orca" {
+	if json.Unmarshal(res, &init) != nil || init.ServerInfo.Name != "askother" {
 		e.t.Fatalf("initialize: %s", res)
 	}
 	c.send(map[string]any{"jsonrpc": "2.0", "method": "notifications/initialized"})
@@ -86,7 +86,7 @@ func (c *mcpClient) send(msg any) {
 	b, err := json.Marshal(msg)
 	must(c.t, err)
 	if _, err := c.in.Write(append(b, '\n')); err != nil {
-		c.t.Fatalf("write to orca mcp: %v (stderr: %s)", err, c.stderr)
+		c.t.Fatalf("write to askother mcp: %v (stderr: %s)", err, c.stderr)
 	}
 }
 
@@ -102,7 +102,7 @@ func (c *mcpClient) request(method string, params any) json.RawMessage {
 		select {
 		case line, ok := <-c.lines:
 			if !ok {
-				c.t.Fatalf("%s: orca mcp closed stdout (stderr: %s)", method, c.stderr)
+				c.t.Fatalf("%s: askother mcp closed stdout (stderr: %s)", method, c.stderr)
 			}
 			var r struct {
 				ID     int             `json:"id"`
@@ -166,10 +166,10 @@ func (c *mcpClient) close() {
 	select {
 	case <-c.exited:
 	case <-time.After(5 * time.Second):
-		c.t.Fatalf("orca mcp did not exit on stdin EOF")
+		c.t.Fatalf("askother mcp did not exit on stdin EOF")
 	}
 	if code := c.cmd.ProcessState.ExitCode(); code != 0 {
-		c.t.Fatalf("orca mcp exit %d after EOF (stderr: %s)", code, c.stderr)
+		c.t.Fatalf("askother mcp exit %d after EOF (stderr: %s)", code, c.stderr)
 	}
 }
 

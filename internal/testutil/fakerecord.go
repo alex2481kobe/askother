@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-// FakeRecord is the JSON the fake worker writes to $ORCA_FAKE_RECORD. It is
+// FakeRecord is the JSON the fake worker writes to $ASKOTHER_FAKE_RECORD. It is
 // rewritten as the scenario proceeds; read it after the fake exits.
 type FakeRecord struct {
 	Dialect       string         `json:"dialect"`

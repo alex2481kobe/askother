@@ -10,7 +10,7 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/alex2481kobe/orca/internal/worker"
+	"github.com/alex2481kobe/askother/internal/worker"
 )
 
 // DrainBound is how long stdout and stderr are drained after the worker

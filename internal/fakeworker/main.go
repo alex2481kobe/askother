@@ -1,14 +1,14 @@
-// Command fakeworker stands in for the codex and claude CLIs so Orca can be
-// tested without models or credentials. It parses the argv shapes Orca uses,
+// Command fakeworker stands in for the codex and claude CLIs so AskOther can be
+// tested without models or credentials. It parses the argv shapes AskOther uses,
 // reads the prompt from stdin, and plays a scripted scenario whose JSONL events
 // follow the shapes the real CLIs emit.
 //
 // The basename of argv[0] ("codex" or "claude") picks the dialect. The
 // environment selects the rest:
 //
-//	ORCA_FAKE_SCENARIO  scenario name (default "ok"); see scenarios.go
-//	ORCA_FAKE_ARG       optional scenario argument
-//	ORCA_FAKE_RECORD    path of a JSON file recording argv, cwd, env names and stdin
+//	ASKOTHER_FAKE_SCENARIO  scenario name (default "ok"); see scenarios.go
+//	ASKOTHER_FAKE_ARG       optional scenario argument
+//	ASKOTHER_FAKE_RECORD    path of a JSON file recording argv, cwd, env names and stdin
 //
 // Exit 64 means the fake itself was misused (unknown scenario, unsupported mode).
 package main
@@ -23,10 +23,10 @@ import (
 )
 
 const (
-	envScenario = "ORCA_FAKE_SCENARIO"
-	envArg      = "ORCA_FAKE_ARG"
-	envRecord   = "ORCA_FAKE_RECORD"
-	envChild    = "ORCA_FAKE_CHILD" // internal: run as a sleeping grandchild
+	envScenario = "ASKOTHER_FAKE_SCENARIO"
+	envArg      = "ASKOTHER_FAKE_ARG"
+	envRecord   = "ASKOTHER_FAKE_RECORD"
+	envChild    = "ASKOTHER_FAKE_CHILD" // internal: run as a sleeping grandchild
 	exitMisuse  = 64
 )
 

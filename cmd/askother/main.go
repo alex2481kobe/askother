@@ -1,4 +1,4 @@
-// Command orca runs coding-agent CLIs as detached, supervised runs and serves
+// Command askother runs coding-agent CLIs as detached, supervised runs and serves
 // them to agents over MCP.
 package main
 
@@ -44,17 +44,17 @@ func dispatch(args []string, stdout, stderr io.Writer) int {
 	case "help", "--help", "-h":
 		return cmdHelp(stdout, stderr)
 	case "version", "--version":
-		fmt.Fprintln(stdout, "orca", version())
+		fmt.Fprintln(stdout, "askother", version())
 		return 0
 	default:
-		fmt.Fprintf(stderr, "orca: unknown command %q\n\n%s", cmd, usage)
+		fmt.Fprintf(stderr, "askother: unknown command %q\n\n%s", cmd, usage)
 		return exitRefused
 	}
 }
 
-// setupFailed reports a Deps error (bad ORCA_HOME or ORCA_CONFIG) and
+// setupFailed reports a Deps error (bad ASKOTHER_HOME or ASKOTHER_CONFIG) and
 // returns the refused exit code.
 func setupFailed(stderr io.Writer, err error) int {
-	fmt.Fprintf(stderr, "orca: %v\n", err)
+	fmt.Fprintf(stderr, "askother: %v\n", err)
 	return exitRefused
 }

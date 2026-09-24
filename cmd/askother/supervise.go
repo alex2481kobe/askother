@@ -3,11 +3,11 @@ package main
 import (
 	"os"
 
-	"github.com/alex2481kobe/orca/internal/lifecycle"
-	"github.com/alex2481kobe/orca/internal/run"
+	"github.com/alex2481kobe/askother/internal/lifecycle"
+	"github.com/alex2481kobe/askother/internal/run"
 )
 
-// cmdSupervise is `orca supervise <id>`, started only by the launcher. It
+// cmdSupervise is `askother supervise <id>`, started only by the launcher. It
 // runs from the record alone and never reads the config.
 // Fds 3 and 4 are handed to Supervise untouched: it marks them
 // close-on-exec before any child exists. No signal handlers: a supervisor

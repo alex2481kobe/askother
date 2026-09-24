@@ -4,7 +4,7 @@ import (
 	"errors"
 	"time"
 
-	"github.com/alex2481kobe/orca/internal/run"
+	"github.com/alex2481kobe/askother/internal/run"
 )
 
 // Retention: a run whose result was read is deleted KeepRead after

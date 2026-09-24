@@ -34,7 +34,7 @@ func StartDetached(self string, args []string, extra []*os.File) (*exec.Cmd, err
 	return cmd, nil
 }
 
-// Reap waits for cmd in the background, so a long-lived `orca mcp` leaves no
+// Reap waits for cmd in the background, so a long-lived `askother mcp` leaves no
 // zombie supervisors behind.
 func Reap(cmd *exec.Cmd) {
 	go func() { _ = cmd.Wait() }()

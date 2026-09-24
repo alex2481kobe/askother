@@ -7,7 +7,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/alex2481kobe/orca/internal/worker"
+	"github.com/alex2481kobe/askother/internal/worker"
 )
 
 func ptr[T any](v T) *T { return &v }

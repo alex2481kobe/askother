@@ -3,7 +3,7 @@ package lifecycle
 import (
 	"sort"
 
-	"github.com/alex2481kobe/orca/internal/run"
+	"github.com/alex2481kobe/askother/internal/run"
 )
 
 // Observe returns the view of run id: the stored record, or interrupted

@@ -1,4 +1,4 @@
-// Package mcp is Orca's MCP server over stdio: the tool inputs and outputs,
+// Package mcp is AskOther's MCP server over stdio: the tool inputs and outputs,
 // strict input decoding, the tools/list payload and the JSON-RPC loop.
 package mcp
 
@@ -10,8 +10,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/alex2481kobe/orca/internal/run"
-	"github.com/alex2481kobe/orca/internal/worker"
+	"github.com/alex2481kobe/askother/internal/run"
+	"github.com/alex2481kobe/askother/internal/worker"
 )
 
 // Tool inputs. Optional strings are empty when absent.
@@ -60,7 +60,7 @@ type RunOutput struct {
 	ID     string    `json:"id"`
 	State  run.State `json:"state"`
 	Reused bool      `json:"reused"`
-	Watch  string    `json:"watch"` // a shell command: orca wait <id>
+	Watch  string    `json:"watch"` // a shell command: askother wait <id>
 }
 
 type WaitOutput struct {

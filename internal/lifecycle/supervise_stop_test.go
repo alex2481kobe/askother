@@ -7,10 +7,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/alex2481kobe/orca/internal/config"
-	"github.com/alex2481kobe/orca/internal/run"
-	"github.com/alex2481kobe/orca/internal/testutil"
-	"github.com/alex2481kobe/orca/internal/worker"
+	"github.com/alex2481kobe/askother/internal/config"
+	"github.com/alex2481kobe/askother/internal/run"
+	"github.com/alex2481kobe/askother/internal/testutil"
+	"github.com/alex2481kobe/askother/internal/worker"
 )
 
 // Readiness comes only after running/live is committed, and a stop ends
@@ -137,7 +137,7 @@ func TestSuperviseRecordsSessionWhileRunning(t *testing.T) {
 }
 
 func init() {
-	// args: state home, run id, Self. Supervise runs as `orca supervise`
+	// args: state home, run id, Self. Supervise runs as `askother supervise`
 	// would: fds 3 and 4 inherited from StartDetached.
 	registerHelper("v-supervise", func(args []string) error {
 		st, err := run.Open(args[0])

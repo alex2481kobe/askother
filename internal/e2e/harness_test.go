@@ -14,33 +14,33 @@ import (
 	"testing"
 	"time"
 
-	"github.com/alex2481kobe/orca/internal/run"
-	"github.com/alex2481kobe/orca/internal/testutil"
+	"github.com/alex2481kobe/askother/internal/run"
+	"github.com/alex2481kobe/askother/internal/testutil"
 )
 
-// env is one test's Orca installation: its own ORCA_HOME, config and
+// env is one test's AskOther installation: its own ASKOTHER_HOME, config and
 // worker wrappers.
 type env struct {
 	t    *testing.T
 	dir  string
 	home string
-	base []string // environment of every orca process the test starts
+	base []string // environment of every askother process the test starts
 	work int
 }
 
 // wrapper is a /bin/sh stand-in for a worker CLI. The worker environment is
-// an allowlist that drops ORCA_FAKE_*, so the scenario comes from files in
+// an allowlist that drops ASKOTHER_FAKE_*, so the scenario comes from files in
 // the run's cwd, and the fake records into that cwd. The wrapper execs the
 // fake, so $$ is the worker pid the run record holds: one file per run.
 const wrapper = `#!/bin/sh
-s=$(cat .orca-scenario 2>/dev/null)
-export ORCA_FAKE_SCENARIO="${s:-ok}"
-if [ -f .orca-arg ]; then export ORCA_FAKE_ARG="$(cat .orca-arg)"; fi
-export ORCA_FAKE_RECORD="$PWD/rec-$$.json"
+s=$(cat .askother-scenario 2>/dev/null)
+export ASKOTHER_FAKE_SCENARIO="${s:-ok}"
+if [ -f .askother-arg ]; then export ASKOTHER_FAKE_ARG="$(cat .askother-arg)"; fi
+export ASKOTHER_FAKE_RECORD="$PWD/rec-$$.json"
 exec %q "$@"
 `
 
-// minimalPath is the only PATH orca processes get. Worker binaries come
+// minimalPath is the only PATH askother processes get. Worker binaries come
 // only from the temp config: an inherited PATH could resolve a real, paid
 // CLI. Note config.Resolve also searches /opt/homebrew/bin and
 // /usr/local/bin when no binary is configured, so every env configures both.
@@ -81,7 +81,7 @@ func newEnvWith(t *testing.T, binaries map[string]string) *env {
 	must(t, os.Mkdir(userHome, 0o700))
 	e.base = []string{
 		"PATH=" + minimalPath, "HOME=" + userHome, "TMPDIR=" + os.TempDir(),
-		"ORCA_HOME=" + e.home, "ORCA_CONFIG=" + cfgPath,
+		"ASKOTHER_HOME=" + e.home, "ASKOTHER_CONFIG=" + cfgPath,
 	}
 	t.Cleanup(func() {
 		if leaked := killLiveRuns(e.home); len(leaked) > 0 {
@@ -111,10 +111,10 @@ func (e *env) workDir(scenario, arg string) string {
 // scenario makes later runs in cwd play scenario with arg.
 func (e *env) scenario(cwd, scenario, arg string) {
 	e.t.Helper()
-	must(e.t, os.WriteFile(filepath.Join(cwd, ".orca-scenario"), []byte(scenario), 0o600))
-	must(e.t, os.RemoveAll(filepath.Join(cwd, ".orca-arg")))
+	must(e.t, os.WriteFile(filepath.Join(cwd, ".askother-scenario"), []byte(scenario), 0o600))
+	must(e.t, os.RemoveAll(filepath.Join(cwd, ".askother-arg")))
 	if arg != "" {
-		must(e.t, os.WriteFile(filepath.Join(cwd, ".orca-arg"), []byte(arg), 0o600))
+		must(e.t, os.WriteFile(filepath.Join(cwd, ".askother-arg"), []byte(arg), 0o600))
 	}
 }
 
@@ -128,12 +128,12 @@ func (e *env) fakeRecord(id string) testutil.FakeRecord {
 	return testutil.ReadFakeRecord(e.t, filepath.Join(r.Request.CWD, fmt.Sprintf("rec-%d.json", *r.Runtime.WorkerPID)))
 }
 
-// orca runs the CLI and returns its exit code and output.
-func (e *env) orca(args ...string) (code int, stdout, stderr string) {
+// askother runs the CLI and returns its exit code and output.
+func (e *env) askother(args ...string) (code int, stdout, stderr string) {
 	e.t.Helper()
 	ctx, cancel := context.WithTimeout(context.Background(), time.Minute)
 	defer cancel()
-	cmd := exec.CommandContext(ctx, orcaBin, args...)
+	cmd := exec.CommandContext(ctx, askotherBin, args...)
 	cmd.Env = e.base
 	var out, errb bytes.Buffer
 	cmd.Stdout, cmd.Stderr = &out, &errb
@@ -144,7 +144,7 @@ func (e *env) orca(args ...string) (code int, stdout, stderr string) {
 	case errors.As(err, &ee):
 		code = ee.ExitCode()
 	default:
-		e.t.Fatalf("orca %v: %v", args, err)
+		e.t.Fatalf("askother %v: %v", args, err)
 	}
 	return code, out.String(), errb.String()
 }
@@ -178,7 +178,7 @@ const exitLag = 5 * time.Second
 // killLiveRuns SIGKILLs the supervisor and worker group of every run in home
 // whose lock is still held, waits for the locks to free, and returns
 // their ids. A run whose record is terminal gets exitLag to release its lock
-// first. Tests only: Orca itself never signals from stored pids.
+// first. Tests only: AskOther itself never signals from stored pids.
 func killLiveRuns(home string) []string {
 	st, err := run.Open(home)
 	if err != nil {

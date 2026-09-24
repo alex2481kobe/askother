@@ -52,7 +52,7 @@ func TestClaudeDecodeRules(t *testing.T) {
 	if f, b, _ := clDecode(t, "", 1, clInit, clGood); f.Success || b != nil {
 		t.Errorf("good result, exit 1: %+v %q", f, b)
 	}
-	// Events and fields Orca does not read never fail a run, whatever their shape.
+	// Events and fields AskOther does not read never fail a run, whatever their shape.
 	if f, _, errs := clDecode(t, "", 0, clInit, `{"type":"rate_limit_event"}`, `{"no_type":1}`, "",
 		`{"type":"assistant","message":5,"session_id":7}`, `{"type":"system","subtype":"permission_denied","tool_name":[]}`,
 		`{"result":"x","is_error":false,"type":"result","usage":"many","modelUsage":7,"api_error_status":"x"}`); !f.Success || errs != nil {

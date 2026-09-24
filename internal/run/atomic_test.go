@@ -10,7 +10,7 @@ import (
 	"syscall"
 	"testing"
 
-	"github.com/alex2481kobe/orca/internal/worker"
+	"github.com/alex2481kobe/askother/internal/worker"
 )
 
 var allOps = []faultOp{opWrite, opSync, opClose, opRename, opDirSync}

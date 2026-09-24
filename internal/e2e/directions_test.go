@@ -11,9 +11,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/alex2481kobe/orca/internal/mcp"
-	"github.com/alex2481kobe/orca/internal/run"
-	"github.com/alex2481kobe/orca/internal/worker"
+	"github.com/alex2481kobe/askother/internal/mcp"
+	"github.com/alex2481kobe/askother/internal/run"
+	"github.com/alex2481kobe/askother/internal/worker"
 )
 
 // A synthetic answer with multibyte text and inner newlines, but no trailing
@@ -29,7 +29,7 @@ type runArgs struct {
 	Task   string `json:"task,omitempty"`
 }
 
-// Claude Code calls Orca; the caller is CLAUDE_CODE_SESSION_ID, the watch
+// Claude Code calls AskOther; the caller is CLAUDE_CODE_SESSION_ID, the watch
 // command wakes it as given, and the result tool delivers the exact answer.
 func TestClaudeClientDirection(t *testing.T) {
 	e := newEnv(t)
@@ -40,16 +40,16 @@ func TestClaudeClientDirection(t *testing.T) {
 	var out mcp.RunOutput
 	c.mustTool("run", runArgs{Key: "k1", Worker: "codex", Prompt: "say it", CWD: cwd, Role: "implementer", Task: "e2e task"}, nil, &out)
 	started := time.Now()
-	if out.Reused || out.Watch != "orca wait "+out.ID {
+	if out.Reused || out.Watch != "askother wait "+out.ID {
 		t.Fatalf("run reply: %+v", out)
 	}
 	// Run the watch value exactly as given: it must be a shell command.
 	words := strings.Fields(out.Watch)
-	code, stdout, stderr := e.orca(words[1:]...)
-	t.Logf("perf: run reply to `orca wait` exit for an ok run: %s", time.Since(started))
-	want := regexp.MustCompile(`^orca: run ` + out.ID + ` done \(exit 0\) \d+(\.\d+)?m?s implementer "e2e task" -> result ` + out.ID + "\n$")
+	code, stdout, stderr := e.askother(words[1:]...)
+	t.Logf("perf: run reply to `askother wait` exit for an ok run: %s", time.Since(started))
+	want := regexp.MustCompile(`^askother: run ` + out.ID + ` done \(exit 0\) \d+(\.\d+)?m?s implementer "e2e task" -> result ` + out.ID + "\n$")
 	if code != 0 || !want.MatchString(stdout) {
-		t.Fatalf("orca wait: exit %d stdout %q stderr %q", code, stdout, stderr)
+		t.Fatalf("askother wait: exit %d stdout %q stderr %q", code, stdout, stderr)
 	}
 
 	var st mcp.StatusOutput
@@ -77,17 +77,17 @@ func TestClaudeClientDirection(t *testing.T) {
 		if n == "CLAUDE_CODE_SESSION_ID" {
 			t.Fatalf("worker env has %s: %v", n, fake.EnvNames)
 		}
-		if n == "ORCA_RUN_ID" {
+		if n == "ASKOTHER_RUN_ID" {
 			hasRunID = true
 		}
 	}
 	if !hasRunID {
-		t.Fatalf("worker env lacks ORCA_RUN_ID: %v", fake.EnvNames)
+		t.Fatalf("worker env lacks ASKOTHER_RUN_ID: %v", fake.EnvNames)
 	}
 	c.close()
 }
 
-// Codex calls Orca; the caller is the thread from each call's _meta, and
+// Codex calls AskOther; the caller is the thread from each call's _meta, and
 // the wait tool is how it learns the run ended.
 func TestCodexClientDirection(t *testing.T) {
 	e := newEnv(t)
@@ -126,7 +126,7 @@ func TestCodexClientDirection(t *testing.T) {
 			t.Fatalf("caller of %s: %q %q", id, r.CallerID, r.CallerSource)
 		}
 	}
-	e.orca("wait", second.ID)
+	e.askother("wait", second.ID)
 	c.close()
 }
 
@@ -164,9 +164,9 @@ func TestToolsList(t *testing.T) {
 
 func TestHelpAndUnknownCommand(t *testing.T) {
 	e := newEnv(t)
-	code, out, _ := e.orca("help")
+	code, out, _ := e.askother("help")
 	for _, want := range []string{"Usage:", "\nDefaults ", "default mode  read-only", "default mode  dontAsk",
-		"\nSetup ", "claude mcp add -s user orca -- " + orcaBin + " mcp\n", "[mcp_servers.orca]\n", "command = " + strconv.Quote(orcaBin)} {
+		"\nSetup ", "claude mcp add -s user askother -- " + askotherBin + " mcp\n", "[mcp_servers.askother]\n", "command = " + strconv.Quote(askotherBin)} {
 		if !strings.Contains(out, want) {
 			t.Errorf("help lacks %q", want)
 		}
@@ -174,13 +174,13 @@ func TestHelpAndUnknownCommand(t *testing.T) {
 	if code != 0 {
 		t.Errorf("help exit %d", code)
 	}
-	t.Logf("orca help:\n%s", out)
-	if code, out, errs := e.orca("bogus"); code != 4 || out != "" || !strings.Contains(errs, "Usage:") {
+	t.Logf("askother help:\n%s", out)
+	if code, out, errs := e.askother("bogus"); code != 4 || out != "" || !strings.Contains(errs, "Usage:") {
 		t.Errorf("bogus: exit %d stdout %q stderr %q", code, out, errs)
 	}
 }
 
-// Performance note: RSS of an idle `orca mcp` after initialize.
+// Performance note: RSS of an idle `askother mcp` after initialize.
 func TestIdleRSS(t *testing.T) {
 	e := newEnv(t)
 	c := e.startMCP("claude-code")
@@ -190,9 +190,9 @@ func TestIdleRSS(t *testing.T) {
 	if err != nil {
 		t.Skipf("ps: %v", err)
 	}
-	t.Logf("perf: idle orca mcp RSS %s KiB", strings.TrimSpace(string(out)))
+	t.Logf("perf: idle askother mcp RSS %s KiB", strings.TrimSpace(string(out)))
 	c.close()
-	if fi, err := os.Stat(orcaBin); err == nil {
-		t.Logf("perf: orca binary %d bytes", fi.Size())
+	if fi, err := os.Stat(askotherBin); err == nil {
+		t.Logf("perf: askother binary %d bytes", fi.Size())
 	}
 }

@@ -14,14 +14,14 @@ import (
 	"testing"
 	"time"
 
-	"github.com/alex2481kobe/orca/internal/lifecycle"
-	"github.com/alex2481kobe/orca/internal/mcp"
-	"github.com/alex2481kobe/orca/internal/run"
-	"github.com/alex2481kobe/orca/internal/testutil"
+	"github.com/alex2481kobe/askother/internal/lifecycle"
+	"github.com/alex2481kobe/askother/internal/mcp"
+	"github.com/alex2481kobe/askother/internal/run"
+	"github.com/alex2481kobe/askother/internal/testutil"
 )
 
 // tEnv is a temp store, a t-supervisor Self and fake worker wrappers. The
-// wrappers are needed because WorkerEnv drops ORCA_FAKE_*.
+// wrappers are needed because WorkerEnv drops ASKOTHER_FAKE_*.
 type tEnv struct {
 	t             *testing.T
 	d             lifecycle.Deps
@@ -73,8 +73,8 @@ func (e *tEnv) fake(dialect, scenario, arg string) (record string) {
 	}
 	record = filepath.Join(dir, "fake-record.json")
 	q := func(s string) string { return "'" + strings.ReplaceAll(s, "'", `'\''`) + "'" }
-	script := fmt.Sprintf("#!/bin/sh\nORCA_FAKE_SCENARIO=%s ORCA_FAKE_ARG=%s ORCA_FAKE_RECORD=%s\n"+
-		"export ORCA_FAKE_SCENARIO ORCA_FAKE_ARG ORCA_FAKE_RECORD\nexec %s \"$@\"\n",
+	script := fmt.Sprintf("#!/bin/sh\nASKOTHER_FAKE_SCENARIO=%s ASKOTHER_FAKE_ARG=%s ASKOTHER_FAKE_RECORD=%s\n"+
+		"export ASKOTHER_FAKE_SCENARIO ASKOTHER_FAKE_ARG ASKOTHER_FAKE_RECORD\nexec %s \"$@\"\n",
 		q(scenario), q(arg), q(record), q(fakeBin))
 	wrapper := filepath.Join(dir, dialect)
 	if err := os.WriteFile(wrapper, []byte(script), 0o700); err != nil {

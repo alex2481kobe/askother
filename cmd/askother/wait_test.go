@@ -9,9 +9,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/alex2481kobe/orca/internal/lifecycle"
-	"github.com/alex2481kobe/orca/internal/run"
-	"github.com/alex2481kobe/orca/internal/worker"
+	"github.com/alex2481kobe/askother/internal/lifecycle"
+	"github.com/alex2481kobe/askother/internal/run"
+	"github.com/alex2481kobe/askother/internal/worker"
 )
 
 var t0 = time.Date(2026, 9, 23, 10, 0, 0, 0, time.UTC)
@@ -96,13 +96,13 @@ func TestStatusLine(t *testing.T) {
 		now  time.Time
 		want string
 	}{
-		{"done", withLabels, now, `orca: run ` + idA + ` done (exit 0) 4m12s scoper "scope \"auth\"\nbug" -> result ` + idA},
-		{"failed", kRecord(idA, run.StateFailed), now, `orca: run ` + idA + ` failed (exit 1) 4m12s: WORKER_FAILED: codex: not logged in -> result ` + idA},
-		{"stopped", kRecord(idA, run.StateStopped), now, `orca: run ` + idA + ` stopped (signal SIGTERM) 4m12s -> result ` + idA},
-		{"interrupted", kRecord(idA, run.StateInterrupted), now, `orca: run ` + idA + ` interrupted (execution unknown) 1m30s -> result ` + idA},
-		{"running", running, now, `orca: run ` + idA + ` running 1m30s`},
-		{"subsecond", fast, t0.Add(750 * time.Millisecond), `orca: run ` + idA + ` running 350ms`},
-		{"long error", longFail, now, `orca: run ` + idA + ` failed (exit 1) 4m12s: WORKER_FAILED: line one line two ` + strings.Repeat("x", 182) + `... -> result ` + idA},
+		{"done", withLabels, now, `askother: run ` + idA + ` done (exit 0) 4m12s scoper "scope \"auth\"\nbug" -> result ` + idA},
+		{"failed", kRecord(idA, run.StateFailed), now, `askother: run ` + idA + ` failed (exit 1) 4m12s: WORKER_FAILED: codex: not logged in -> result ` + idA},
+		{"stopped", kRecord(idA, run.StateStopped), now, `askother: run ` + idA + ` stopped (signal SIGTERM) 4m12s -> result ` + idA},
+		{"interrupted", kRecord(idA, run.StateInterrupted), now, `askother: run ` + idA + ` interrupted (execution unknown) 1m30s -> result ` + idA},
+		{"running", running, now, `askother: run ` + idA + ` running 1m30s`},
+		{"subsecond", fast, t0.Add(750 * time.Millisecond), `askother: run ` + idA + ` running 350ms`},
+		{"long error", longFail, now, `askother: run ` + idA + ` failed (exit 1) 4m12s: WORKER_FAILED: line one line two ` + strings.Repeat("x", 182) + `... -> result ` + idA},
 	}
 	for _, c := range cases {
 		t.Run(c.name, func(t *testing.T) {
@@ -177,7 +177,7 @@ func TestWaitRunsWaiterCodes(t *testing.T) {
 	}
 	start := time.Now()
 	code, out, _ := waitCode(t, context.Background(), d, waitArgs{ids: []string{idA}, timeout: 300 * time.Millisecond})
-	if code != exitTimeout || !strings.HasPrefix(out, "orca: run "+idA+" running ") || time.Since(start) > 2*time.Second {
+	if code != exitTimeout || !strings.HasPrefix(out, "askother: run "+idA+" running ") || time.Since(start) > 2*time.Second {
 		t.Errorf("timeout: exit %d %q", code, out)
 	}
 	code, out, _ = waitCode(t, context.Background(), d, waitArgs{ids: []string{idA, idB}, any: true})

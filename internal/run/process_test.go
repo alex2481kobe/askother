@@ -12,17 +12,17 @@ import (
 	"testing"
 	"time"
 
-	"github.com/alex2481kobe/orca/internal/testutil"
-	"github.com/alex2481kobe/orca/internal/worker"
+	"github.com/alex2481kobe/askother/internal/testutil"
+	"github.com/alex2481kobe/askother/internal/worker"
 )
 
 // The test binary doubles as a launcher and a supervisor, selected by env.
 const (
-	helperEnv    = "ORCA_RUN_TEST_HELPER" // "launcher" or "supervisor"
-	helperLock   = "ORCA_RUN_TEST_LOCK"   // run lock path
-	helperWorker = "ORCA_RUN_TEST_WORKER" // fake codex path; supervisor starts it hanging
-	helperOut    = "ORCA_RUN_TEST_OUT"    // file the supervisor writes the worker pid to
-	helperNoCOE  = "ORCA_RUN_TEST_NO_CLOEXEC"
+	helperEnv    = "ASKOTHER_RUN_TEST_HELPER" // "launcher" or "supervisor"
+	helperLock   = "ASKOTHER_RUN_TEST_LOCK"   // run lock path
+	helperWorker = "ASKOTHER_RUN_TEST_WORKER" // fake codex path; supervisor starts it hanging
+	helperOut    = "ASKOTHER_RUN_TEST_OUT"    // file the supervisor writes the worker pid to
+	helperNoCOE  = "ASKOTHER_RUN_TEST_NO_CLOEXEC"
 )
 
 func TestMain(m *testing.M) {

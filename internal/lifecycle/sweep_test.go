@@ -8,7 +8,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/alex2481kobe/orca/internal/run"
+	"github.com/alex2481kobe/askother/internal/run"
 )
 
 func oHours(h float64) time.Time { return oT0.Add(time.Duration(h * float64(time.Hour))) }

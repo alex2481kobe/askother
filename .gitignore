@@ -1,8 +1,9 @@
 # Only what a build produces or what must never leave a machine.
 
 # Built binaries
-/orca
-/cmd/orca/orca
+/askother
+/cmd/*/*
+!/cmd/*/*.go
 *.test
 *.out
 dist/

@@ -9,7 +9,7 @@ import (
 	"runtime/debug"
 	"slices"
 
-	"github.com/alex2481kobe/orca/internal/run"
+	"github.com/alex2481kobe/askother/internal/run"
 )
 
 // protocolVersions are the revisions tested with both Claude Code and
@@ -170,7 +170,7 @@ func (s *Server) initialize(params json.RawMessage) (any, *rpcError) {
 	return map[string]any{
 		"protocolVersion": version,
 		"capabilities":    map[string]any{"tools": map[string]any{}},
-		"serverInfo":      map[string]any{"name": "orca", "version": s.version},
+		"serverInfo":      map[string]any{"name": "askother", "version": s.version},
 	}, nil
 }
 

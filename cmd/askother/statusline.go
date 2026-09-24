@@ -7,16 +7,16 @@ import (
 	"time"
 	"unicode"
 
-	"github.com/alex2481kobe/orca/internal/run"
+	"github.com/alex2481kobe/askother/internal/run"
 )
 
 // maxErrorRunes bounds the error message on a status line, which must stay
 // one short line.
 const maxErrorRunes = 200
 
-// statusLine is the one-line status `orca wait` prints per run:
+// statusLine is the one-line status `askother wait` prints per run:
 //
-//	orca: run <id> <state>[ (<how>)] <elapsed>[ <role>][ "<task>"][: <CODE>: <message>][ -> result <id>]
+//	askother: run <id> <state>[ (<how>)] <elapsed>[ <role>][ "<task>"][: <CODE>: <message>][ -> result <id>]
 //
 // <how> is "exit N" or "signal NAME" when the worker exit is known, and
 // "execution <execution>" for an interrupted run without one. <elapsed> is
@@ -27,7 +27,7 @@ const maxErrorRunes = 200
 // "-> result <id>", the run to read.
 func statusLine(r *run.Run, now time.Time) string {
 	var b strings.Builder
-	fmt.Fprintf(&b, "orca: run %s %s", r.ID, r.State)
+	fmt.Fprintf(&b, "askother: run %s %s", r.ID, r.State)
 	if how := howEnded(r); how != "" {
 		fmt.Fprintf(&b, " (%s)", how)
 	}

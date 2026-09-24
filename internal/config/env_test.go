@@ -10,21 +10,21 @@ func callerEnv() map[string]string {
 	return map[string]string{
 		"PATH": "/usr/bin:/bin", "HOME": "/synthetic/user", "USER": "tester", "SHELL": "/bin/zsh",
 		"LANG": "en_US.UTF-8", "LC_ALL": "C", "LC_CTYPE": "UTF-8", "TMPDIR": "/tmp/x", "TERM": "xterm",
-		"ORCA_HOME": "/tmp/orca-state", "ORCA_RUN_ID": "caller-run",
+		"ASKOTHER_HOME": "/tmp/askother-state", "ASKOTHER_RUN_ID": "caller-run",
 		// harness ids, never forwarded
 		"CLAUDE_CODE_SESSION_ID": "sess-synthetic", "CLAUDE_CODE_MESSAGING_TOKEN": "tok-synthetic",
 		"CLAUDE_CODE_MESSAGING_SOCKET": "/tmp/sock", "CLAUDE_PID": "123", "CLAUDECODE": "1",
 		"CLAUDE_CODE_CHILD_SESSION": "1", "CODEX_THREAD_ID": "thr", "CODEX_SESSION_ID": "thr",
 		"CODEX_SANDBOX": "seatbelt", "CODEX_CI": "1",
 		// not on the allowlist
-		"ORCA_CALLER": "someone", "OPENAI_API_KEY": "k", "AWS_SECRET": "s", "SSH_AUTH_SOCK": "/s",
+		"ASKOTHER_CALLER": "someone", "OPENAI_API_KEY": "k", "AWS_SECRET": "s", "SSH_AUTH_SOCK": "/s",
 		"CLAUDE_EFFORT": "high", "LCX": "no", "lc_all": "no",
 	}
 }
 
 func TestWorkerEnvAllowlist(t *testing.T) {
 	got := EnvMap(WorkerEnv(callerEnv()))
-	for _, k := range []string{"HOME", "USER", "SHELL", "LANG", "LC_ALL", "LC_CTYPE", "TMPDIR", "TERM", "ORCA_HOME"} {
+	for _, k := range []string{"HOME", "USER", "SHELL", "LANG", "LC_ALL", "LC_CTYPE", "TMPDIR", "TERM", "ASKOTHER_HOME"} {
 		if got[k] != callerEnv()[k] {
 			t.Errorf("allowed %s: got %q, want %q", k, got[k], callerEnv()[k])
 		}
@@ -32,7 +32,7 @@ func TestWorkerEnvAllowlist(t *testing.T) {
 	for _, k := range []string{
 		"CLAUDE_CODE_SESSION_ID", "CLAUDE_CODE_MESSAGING_TOKEN", "CLAUDE_CODE_MESSAGING_SOCKET",
 		"CLAUDE_PID", "CLAUDECODE", "CLAUDE_CODE_CHILD_SESSION", "CODEX_THREAD_ID", "CODEX_SESSION_ID",
-		"CODEX_SANDBOX", "CODEX_CI", "ORCA_RUN_ID", "ORCA_CALLER", "OPENAI_API_KEY", "AWS_SECRET", "SSH_AUTH_SOCK",
+		"CODEX_SANDBOX", "CODEX_CI", "ASKOTHER_RUN_ID", "ASKOTHER_CALLER", "OPENAI_API_KEY", "AWS_SECRET", "SSH_AUTH_SOCK",
 		"CLAUDE_EFFORT", "LCX", "lc_all",
 	} {
 		if v, ok := got[k]; ok {
@@ -46,8 +46,8 @@ func TestWorkerEnvAllowlist(t *testing.T) {
 
 func TestWorkerEnvOptionalVars(t *testing.T) {
 	got := EnvMap(WorkerEnv(map[string]string{"HOME": "/h"}))
-	if _, ok := got["ORCA_HOME"]; ok {
-		t.Error("ORCA_HOME set although absent")
+	if _, ok := got["ASKOTHER_HOME"]; ok {
+		t.Error("ASKOTHER_HOME set although absent")
 	}
 }
 

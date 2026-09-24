@@ -25,7 +25,7 @@ discussions) and whenever someone is representing the project in public.
 ## How to report
 
 Report unacceptable behavior privately to the maintainer through GitHub. Open a
-[private security advisory](https://github.com/alex2481kobe/orca/security/advisories/new)
+[private security advisory](https://github.com/alex2481kobe/askother/security/advisories/new)
 (it is a private channel) or contact [@alex2481kobe](https://github.com/alex2481kobe)
 directly. Reports are handled confidentially and reviewed promptly.
 

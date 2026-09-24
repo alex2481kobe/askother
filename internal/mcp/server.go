@@ -17,7 +17,7 @@ import (
 )
 
 // WaitBudget is the server-side cap on one wait call: below the tool-call
-// timeouts of the MCP clients Orca serves, since a client may not cancel.
+// timeouts of the MCP clients AskOther serves, since a client may not cancel.
 const WaitBudget = 50 * time.Second
 
 // shutdownGrace is how long shutdown waits for in-flight responses after
@@ -84,7 +84,7 @@ func NewServer(c Config) *Server {
 		known[t.Name] = true
 	}
 	return &Server{
-		in: bufio.NewReader(c.In), out: c.Out, log: log.New(logw, "orca mcp: ", log.LstdFlags),
+		in: bufio.NewReader(c.In), out: c.Out, log: log.New(logw, "askother mcp: ", log.LstdFlags),
 		version: c.Version, tools: tools, known: known, handler: c.Handler,
 		inflight: map[string]*pending{},
 	}

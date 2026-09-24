@@ -1,5 +1,5 @@
-// Package e2e tests the real orca binary end to end: `orca mcp` over pipes,
-// detached supervisors, fake codex/claude workers and the `orca wait` CLI.
+// Package e2e tests the real askother binary end to end: `askother mcp` over pipes,
+// detached supervisors, fake codex/claude workers and the `askother wait` CLI.
 package e2e
 
 import (
@@ -11,20 +11,20 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/alex2481kobe/orca/internal/testutil"
+	"github.com/alex2481kobe/askother/internal/testutil"
 )
 
-// buildDir holds the orca binary and every test's state; it outlives the
+// buildDir holds the askother binary and every test's state; it outlives the
 // tests so TestMain can check them for survivors.
 var (
-	buildDir string
-	orcaBin  string
+	buildDir    string
+	askotherBin string
 )
 
 func TestMain(m *testing.M) {
 	code := 1
-	if err := buildOrca(); err != nil {
-		fmt.Fprintln(os.Stderr, "FAIL: build orca:", err)
+	if err := buildAskOther(); err != nil {
+		fmt.Fprintln(os.Stderr, "FAIL: build askother:", err)
 	} else {
 		code = m.Run()
 	}
@@ -42,9 +42,9 @@ func TestMain(m *testing.M) {
 	os.Exit(code)
 }
 
-func buildOrca() error {
+func buildAskOther() error {
 	var err error
-	if buildDir, err = os.MkdirTemp("", "orca-e2e-"); err != nil {
+	if buildDir, err = os.MkdirTemp("", "askother-e2e-"); err != nil {
 		return err
 	}
 	// Resolve /var -> /private/var so paths compare equal to what the
@@ -52,9 +52,9 @@ func buildOrca() error {
 	if buildDir, err = filepath.EvalSymlinks(buildDir); err != nil {
 		return err
 	}
-	orcaBin = filepath.Join(buildDir, "orca")
+	askotherBin = filepath.Join(buildDir, "askother")
 	_, file, _, _ := runtime.Caller(0)
-	cmd := exec.Command("go", "build", "-o", orcaBin, "./cmd/orca")
+	cmd := exec.Command("go", "build", "-o", askotherBin, "./cmd/askother")
 	cmd.Dir = filepath.Join(filepath.Dir(file), "..", "..")
 	if out, err := cmd.CombinedOutput(); err != nil {
 		return fmt.Errorf("%v: %s", err, out)

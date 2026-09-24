@@ -11,7 +11,7 @@ import (
 // is dropped: the caller's harness ids would otherwise leak into the worker.
 var allowed = map[string]bool{
 	"PATH": true, "HOME": true, "USER": true, "SHELL": true, "LANG": true,
-	"TMPDIR": true, "TERM": true, "ORCA_HOME": true,
+	"TMPDIR": true, "TERM": true, "ASKOTHER_HOME": true,
 }
 
 // EnvMap turns os.Environ-style entries into a map. Later entries win.

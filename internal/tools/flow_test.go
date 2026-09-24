@@ -7,9 +7,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/alex2481kobe/orca/internal/mcp"
-	"github.com/alex2481kobe/orca/internal/run"
-	"github.com/alex2481kobe/orca/internal/testutil"
+	"github.com/alex2481kobe/askother/internal/mcp"
+	"github.com/alex2481kobe/askother/internal/run"
+	"github.com/alex2481kobe/askother/internal/testutil"
 )
 
 // run, wait, result through the real launcher and supervisor: the answer is
@@ -28,7 +28,7 @@ func TestRunWaitResult(t *testing.T) {
 			h, o := e.handler(nil), callOpt{}
 			args := map[string]any{"key": "k1", "worker": tc.worker, "prompt": "say it", "cwd": e.cwd}
 			ro := must[mcp.RunOutput](t, h, o, "run", args)
-			if ro.Reused || ro.Watch != "orca wait "+ro.ID {
+			if ro.Reused || ro.Watch != "askother wait "+ro.ID {
 				t.Fatalf("run output %+v", ro)
 			}
 			wo := must[mcp.WaitOutput](t, h, o, "wait", map[string]any{"ids": []string{ro.ID}})
@@ -94,7 +94,7 @@ func TestIdentity(t *testing.T) {
 	a := callOpt{client: codex, meta: json.RawMessage(`{"threadId":"thread-a"}`)}
 	b := callOpt{client: codex, meta: json.RawMessage(`{"x-codex-turn-metadata":{"thread_id":"thread-b"}}`)}
 
-	h := e.handler(map[string]string{"CLAUDE_CODE_SESSION_ID": "claude-session-synthetic", "ORCA_RUN_ID": "ignored"})
+	h := e.handler(map[string]string{"CLAUDE_CODE_SESSION_ID": "claude-session-synthetic", "ASKOTHER_RUN_ID": "ignored"})
 	ids := []string{start(h, claude, "claude-1"), start(h, a, "thread-a-1"), start(h, b, "thread-b-1"), start(h, callOpt{}, "plain-1")}
 	want := []struct {
 		id  string

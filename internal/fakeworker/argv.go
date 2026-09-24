@@ -9,7 +9,7 @@ import (
 
 // invocation is what the fake understood from its argv. One type serves both
 // dialects; fields a dialect does not use stay empty. It is written to the
-// record file so tests can assert what Orca passed.
+// record file so tests can assert what AskOther passed.
 type invocation struct {
 	Resume         bool     `json:"resume"`
 	ResumeID       string   `json:"resume_id,omitempty"`
@@ -34,7 +34,7 @@ func (e argError) Error() string { return string(e) }
 func argErrorf(format string, a ...any) error { return argError(fmt.Sprintf(format, a...)) }
 
 // grammar is the part of a CLI's command line the fake accepts. Anything else
-// is rejected, so an adapter that passes a flag Orca no longer uses fails.
+// is rejected, so an adapter that passes a flag AskOther no longer uses fails.
 type grammar struct {
 	values     map[string]string // spelling -> long name, for options that take a value
 	flags      []string
@@ -148,7 +148,7 @@ func parseCodex(args []string) (invocation, error) {
 	return in, err
 }
 
-// parseClaude understands the headless Claude Code flags Orca uses.
+// parseClaude understands the headless Claude Code flags AskOther uses.
 func parseClaude(args []string) (invocation, error) {
 	var in invocation
 	flags, err := claudeGrammar.parse(args, func(name, val string) error {

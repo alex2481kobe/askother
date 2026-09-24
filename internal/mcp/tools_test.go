@@ -7,7 +7,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/alex2481kobe/orca/internal/worker"
+	"github.com/alex2481kobe/askother/internal/worker"
 )
 
 // Synthetic facts; the real ones come from the adapters.

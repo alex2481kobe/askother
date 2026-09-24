@@ -15,7 +15,7 @@ import (
 	"syscall"
 	"testing"
 
-	"github.com/alex2481kobe/orca/internal/testutil"
+	"github.com/alex2481kobe/askother/internal/testutil"
 )
 
 const clSession = "00000000-0000-4000-8000-000000000001"

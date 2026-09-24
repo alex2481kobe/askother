@@ -17,7 +17,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/alex2481kobe/orca/internal/testutil"
+	"github.com/alex2481kobe/askother/internal/testutil"
 )
 
 func TestMain(m *testing.M) {
@@ -99,7 +99,7 @@ func claudeArgv(extra ...string) []string {
 		"--permission-prompts", "none"}, extra...)
 }
 
-// lines splits stdout into events the way Orca must: ReadBytes('\n'), no
+// lines splits stdout into events the way AskOther must: ReadBytes('\n'), no
 // size cap, and a final line without '\n' still counts.
 func lines(t *testing.T, stdout []byte) [][]byte {
 	t.Helper()
